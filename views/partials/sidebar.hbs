@@ -1,0 +1,34 @@
+<div id="sidebar" class="sidebar">
+			<!-- begin sidebar scrollbar -->
+	<div data-scrollbar="true" data-height="100%">
+		<!-- begin sidebar user -->
+		<ul class="nav">
+			<li class="nav-profile">
+				<div class="image">
+					<a href="javascript:;"><img src="{{image}}" alt="" /></a>
+				</div>
+				<div class="info">
+					{{user.first_name}}&nbsp;{{user.last_name}}
+					<small>Administrator</small>
+				</div>
+			</li>
+		</ul>
+		<!-- end sidebar user -->
+		<!-- begin sidebar nav -->
+		<ul class="nav">
+			
+			<li class="{{#if (eq active "dashboard")}} active {{/if}}"><a href="/admin/dashboard"><i class="fa fa-cogs"></i> <span>Dashboard</span></a></li>
+
+			<li class="{{#if (eq active "settings")}} active {{/if}}"><a href="/admin/settings"><i class="fa fa-cogs"></i> <span>Settings</span></a></li>
+
+			<li class="{{#if (eq active "events")}} active {{/if}}"><a href="/admin/events"><i class="fa fa-calendar"></i> <span>Events</span></a></li>
+			
+	        <!-- begin sidebar minify button -->
+			<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+	        <!-- end sidebar minify button -->
+		</ul>
+		<!-- end sidebar nav -->
+	</div>
+			<!-- end sidebar scrollbar -->
+</div>
+<div class="sidebar-bg"></div>

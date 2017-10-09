@@ -1,0 +1,153 @@
+<div id="content" class="content">
+			<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+		<li class="active">Settings</li>
+	</ol>
+	
+	<div class="row">
+	    <div class="col-md-12">
+	        <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    {{!-- <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                    </div> --}}
+                    <h4 class="panel-title">Company Settings</h4>
+                </div>
+                <div class="panel-body">
+                    {{#if message}}
+                        <div class="alert alert-success" id="success-alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <strong>Success! </strong>
+                            {{message}}
+                        </div>
+          
+                    {{/if}}
+                    <form class="form-horizontal" id="frmSettings" name="frmSettings" method="POST" action="/admin/settings">
+                        <input type="hidden" name="_id" name="_id" value="{{settings._id}}">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Name</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter company name"  name="company_name" id="company_name" value="{{settings.company_name}}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Address</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter company address" rows="5" name="company_address" id="company_address">{{settings.company_address}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Email</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter company email"  name="company_email" id="company_email" value="{{settings.email}}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contact No</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter company contact no"  name="contact_no" id="contact_no" value="{{settings.contact_no}}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Google store link</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter google store link"  name="google_store_link" id="google_store_link" value="{{settings.google_store_link}}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Apple store link</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter apple store link"  name="apple_store_link" id="apple_store_link" value="{{settings.apple_store_link}}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Twillio No</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter twillio number"  name="twilio_no" id="twilio_no" value="{{settings.twilio_no}}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+    </div>
+          
+</div>
+<style type="text/css">
+.error {
+    text-align: left!important;
+    color: #f00;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $("#frmSettings").validate({
+            rules: {
+                company_name: {
+                    required: true
+                },
+                company_address: {
+                    required: true
+                },
+                company_email: {
+                    required: true,
+                    email: true
+                },
+                contact_no: {
+                    required: true
+                },
+                google_store_link: {
+                    required: true
+                },
+                apple_store_link: {
+                    required: true
+                },
+                twilio_no: {
+                    required: true
+                }
+            },
+            messages: {
+                company_name: {
+                    required: "Please enter company name"
+                },
+                company_address: {
+                    required: "Please enter company address"
+                },
+                company_email: {
+                    required: "Please enter company email",
+                    email: "Please enter valid email"
+                },
+                contact_no: {
+                    required: "Please enter contact no"
+                },
+                google_store_link: {
+                    required: "Please enter google store link"
+                },
+                apple_store_link: {
+                    required: "Please enter apple store link"
+                },
+                twilio_no: {
+                    required: "Please enter twillio number for 2 way sms"
+                }
+            },
+            submitHandler:function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>

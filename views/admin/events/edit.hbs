@@ -1,0 +1,132 @@
+<div id="content" class="content">
+			<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/events">Event</a></li>
+		<li class="active">Edit</li>
+	</ol>
+	
+	<div class="row">
+	    <div class="col-md-12">
+	        <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    {{!-- <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                    </div> --}}
+                    <h4 class="panel-title">Event - Edit</h4>
+                </div>
+                <div class="panel-body">
+                    
+                    <form class="form-horizontal" id="frmEvents" name="frmEvents" method="POST" action="/admin/events/edit/{{event.0._id}}" enctype="multipart/form-data">
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Name</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter event name"  name="event_name" id="event_name" value="{{event.0.event_name}}"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Date</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter event date"  name="event_date" id="event_date" value="{{dateFormat event.0.event_date "DD/MM/YYYY"}}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Time</label>
+                            <div class="col-md-9">
+                                <div class="input-group date" id="datetimepicker2">
+                                    <input type="text" class="form-control" name="event_time" id="event_time" value="{{event.0.event_time}}" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Place</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter event address" rows="5" name="event_address" id="event_address">{{event.0.event_address}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Image</label>
+                            <div class="col-md-9">
+                                <input type="file" class="form-control"  name="event_image" id="event_image"  />
+                                <img src="{{img_src event.0.event_image}}" id="img_preview" class="img-responsive" width="100px" height="100px">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+    </div>
+          
+</div>
+<style type="text/css">
+.error {
+    text-align: left!important;
+    color: #f00;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+           $("#success-alert").slideUp(500);
+        });
+
+        $("#frmEvents").validate({
+            rules: {
+                event_name: {
+                    required: true
+                },
+                event_date: {
+                    required: true
+                },
+                event_time: {
+                    required: true
+                },
+                event_address: {
+                    required: true
+                },
+                event_image: {
+                    extension: 'jpg|png'
+                }
+            },
+            messages: {
+                event_name: {
+                    required: "Please enter event name"
+                },
+                event_date: {
+                    required: "Please enter event date"
+                },
+                event_time: {
+                    required: "Please enter event time"
+                },
+                event_address: {
+                    required: "Please enter event address"
+                },
+                event_image: {
+                    extension: 'File type must be jpg or png'
+                }
+            },
+            submitHandler:function(form) {
+                form.submit();
+            }
+        });
+
+    });
+</script>
