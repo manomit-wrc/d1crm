@@ -3,7 +3,8 @@ module.exports = function(app, passport) {
 	var User = require("../models/user").User;
 
 	var bCrypt = require('bcrypt-nodejs');
-
+      
+      //console.log(bCrypt);
 	// =====================================
 	// Login PAGE (with login links) ========
 	// =====================================

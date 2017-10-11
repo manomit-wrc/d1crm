@@ -1,0 +1,182 @@
+<div id="content" class="content">
+			<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/events">Profile</a></li>
+		<li class="active">Edit</li>
+	</ol>
+	
+	<div class="row">
+	    <div class="col-md-12">
+	        <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    {{!-- <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                    </div> --}}
+                    <h4 class="panel-title">Profile - Edit</h4>
+                </div>
+                <div class="panel-body">
+
+                     {{#if message}}
+                        <div class="alert alert-success" id="success-alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <strong>Success! </strong>
+                            {{message}}
+                        </div>
+          
+                    {{/if}}
+                    
+                    <form class="form-horizontal" id="frmProfile" name="frmProfile" method="POST" action="/admin/profile/update" enctype="multipart/form-data">
+                        
+                        <input type="hidden" name="_id" name="_id" value="{{profile._id}}">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">First Name</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter first name"  name="first_name" id="first_name" value="{{profile.first_name}}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Last Name</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter last name"  name="last_name" id="last_name" value="{{profile.last_name}}"/>
+                            </div>
+                        </div>
+
+                      
+                      
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Address</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter user address" rows="5" name="profile_address" id="profile_address">{{profile.address}}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Country</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter country name"  name="country_name" id="country_name" value="{{profile.country}}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">State</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter state name"  name="state_name" id="state_name" value="{{profile.state}}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">City</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter city name"  name="city_name" id="city_name" value="{{profile.city}}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Pincode</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter pincode"  name="pincode" id="pincode" value="{{profile.pincode}}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Image</label>
+                            <div class="col-md-9">
+                                <input type="file" class="form-control"  name="event_image" id="event_image"  />
+                                <img src="{{img_src profile.avator}}" id="img_preview" class="img-responsive" width="100px" height="100px">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+    </div>
+          
+</div>
+<style type="text/css">
+.error {
+    text-align: left!important;
+    color: #f00;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+           $("#success-alert").slideUp(500);
+        });
+
+        $("#frmProfile").validate({
+            rules: {
+                first_name: {
+                    required: true
+                },
+                last_name: {
+                    required: true
+                },
+                profile_address: {
+                    required: true
+                },
+                country_name: {
+                    required: true
+                },
+                state_name: {
+                    required: true
+                },
+                city_name: {
+                    required: true
+                },
+                pincode: {
+                    required: true
+                },
+                profile_image: {
+                    extension: 'jpg|png'
+                }
+            },
+            messages: {
+                first_name: {
+                    required: "Please enter first name"
+                },
+                last_name: {
+                    required: "Please enter last name"
+                },
+                profile_address: {
+                    required: "Please enter user address"
+                },
+                country_name: {
+                    required: "Please enter country name"
+                },
+                state_name: {
+                    required: "Please enter state name"
+                },
+                city_name: {
+                    required: "Please enter city name"
+                },
+                pincode: {
+                    required: "Please enter pincode"
+                },
+                profile_image: {
+                    extension: 'File type must be jpg or png'
+                }
+            },
+            submitHandler:function(form) {
+                form.submit();
+            }
+        });
+
+    });
+</script>

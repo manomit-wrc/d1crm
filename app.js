@@ -150,6 +150,7 @@ app.use(function(req, res, next){
 
 require('./routes/dashboard')(app);
 require('./routes/events')(app);
+require('./routes/profile')(app);
 
 // catch 404 and forward to error handler
 
