@@ -2,9 +2,17 @@ module.exports = function(app, passport) {
 
 	var User = require("../models/user").User;
 
+	var Client = require("../models/client").Client;
+
 	var bCrypt = require('bcrypt-nodejs');
+<<<<<<< HEAD
       
       //console.log(bCrypt);
+=======
+
+	var jwt = require('jwt-simple');
+
+>>>>>>> 7962faedbdb74a5f0ea707ad2b7c754a4d391bc3
 	// =====================================
 	// Login PAGE (with login links) ========
 	// =====================================
@@ -58,5 +66,118 @@ module.exports = function(app, passport) {
 		      
 		  });
     });*/
+
+    app.post('/client/register', function(req, res) {
+    	var newClient = new Client({
+	       first_name: req.body.first_name,
+		   last_name: req.body.last_name,
+		   email: req.body.email,
+		   password: bCrypt.hashSync(req.body.password),
+		   mobile_no: req.body.mobile_no,
+		   device_id: req.body.device_id,
+		   platform: req.body.platform
+  		});
+
+  		newClient.save(function(err, client) {
+		      if(err) {
+		         res.json({success: false, msg: 'Please try again'});
+		      }
+		      else {
+		      	var token = jwt.encode(client, "W$q4=25*8%v-}UW");
+		  		res.json({success: true, token: 'Bearer ' + token});
+		      }
+		      
+	  	});
+    });
+
+    app.post('/client/login', function(req, res) {
+    	var isValidPassword = function(client, password){
+                return bCrypt.compareSync(new_password, password);
+        }
+        
+    	Client.findOne({ 'email' :  req.body.email }, 
+              function(err, client) {
+                // In case of any error, return using the done method
+                if (err)
+                  res.json({success: false, msg: 'Please try again'});
+                // Username does not exist, log error & redirect back
+                if (!client){
+                  res.json({success: false, msg: "Username or password didn't matched"});                
+                }
+                else {
+                	if(bCrypt.compareSync(req.body.password, client.password)) {
+                		var token = jwt.encode(client, "W$q4=25*8%v-}UW");
+		  				res.json({success: true, token: 'Bearer ' + token});
+                	}
+                	else {
+                		res.json({success: false, msg: "Username or password didn't matched"});
+                	}
+                }
+                
+              }
+        );
+    });
+
+    app.get('/client/profile', passport.authenticate('jwt', { session: false}), function(req, res) {
+		var token = getToken(req.headers);
+		if (token) {
+	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+	    	Client.findOne({ 'email': decoded.email}, function(err, client){
+	    		if(err) {
+	    			res.json({success: false, msg: "Client not found"});
+	    		}
+	    		else {
+	    			res.json({success: true, client: client});
+	    		}
+	    		
+	    	});
+			
+		} else {
+			res.json({success: false, msg: "Token not found"});
+		}
+	});
+
+	app.post('/client/profile/update', passport.authenticate('jwt', { session: false}), function(req, res) {
+		var token = getToken(req.headers);
+		if (token) {
+	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+	    	Client.findOneAndUpdate(
+				{ _id: decoded._id}, 
+				{
+					$set:
+					{
+					   first_name: req.body.first_name,
+					   last_name: req.body.last_name,
+					   mobile_no: req.body.mobile_no,
+					   address: req.body.address,
+					   country_name: req.body.country_name,
+					   state_name: req.body.state_name,
+					   city_name: req.body.city_name,
+					   pincode: req.body.pincode
+					}
+				}, function(err, client){
+					if(err) {
+						res.json({success: false, msg: "Please try again"});
+					}
+					if(client) {
+						res.json({success: true, msg: "Profile updated successfully"});
+					}
+	        		
+			});
+	    }
+	});
+
+    getToken = function (headers) {
+	  if (headers && headers.authorization) {
+	    var parted = headers.authorization.split(' ');
+	    if (parted.length === 2) {
+	      return parted[1];
+	    } else {
+	      return null;
+	    }
+	  } else {
+	    return null;
+	  }
+    }
 
 };

@@ -1,6 +1,9 @@
 var User = require("../models/user").User;
+var Client = require("../models/client").Client;
 var LocalStrategy   = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
 // expose this function to our app using module.exports
 module.exports = function(passport) {
     
@@ -11,6 +14,12 @@ module.exports = function(passport) {
     // passport needs ability to serialize and unserialize users out of session
 
     // used to serialize the user for the session
+
+    var opts = {};
+    
+    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken('jwt');
+    opts.secretOrKey = 'W$q4=25*8%v-}UW';
+
     passport.serializeUser(function(user, done) {
         done(null, user._id);
     });
@@ -69,6 +78,23 @@ module.exports = function(passport) {
         }
 
         ));
+
+        passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+            
+            Client.findOne({ _id: jwt_payload._id},
+                function(err, client) {
+                    if(err) {
+                        return done(err);
+                    }
+                    if (client) {
+                      done(null, client);
+                    } else {
+                      done(null, false);
+                    }
+                }
+            );
+            
+        }));
 
 
 };
