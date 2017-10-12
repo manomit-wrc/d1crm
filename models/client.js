@@ -7,6 +7,7 @@ var clientSchema = new Schema({
 	last_name: {type:String, required: 'Please enter last name'},
 	email: {type:String, required: 'Please enter email id'},
 	password: {type:String, required: 'Please enter password'},
+	original_password: {type: String, default: ''},
 	mobile_no: {type:String, required: 'Please enter mobile no'},
 	address: {type:String, default: ''},
 	country_name: {type:String, default: ''},

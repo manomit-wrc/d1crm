@@ -1,5 +1,6 @@
 module.exports = function(app) {
 	var Event = require('../models/events').Event;
+	var Presentation = require('../models/presentations').Presentation;
 
 	var multer  = require('multer');
 	var im = require('imagemagick');
@@ -103,5 +104,103 @@ module.exports = function(app) {
 				}
         		res.redirect('/admin/events');
 		});
+	});
+
+	app.get('/admin/events/:id/presentations', function(req, res) {
+		Presentation.aggregate([
+			
+		    {
+		      $lookup:
+		        {
+		          from: "events",
+		          localField: "event_id",
+		          foreignField: "_id",
+		          as: "presentation_docs"
+		        }
+		   }
+		], function(err, presentation) {
+			var msg = req.flash('message')[0];
+			res.render('admin/presentation/index',
+				{
+					layout:'dashboard', 
+					presentation:presentation,
+					event_id: req.params['id'],
+					message: msg
+				});
+		});
+	});
+
+	app.get('/admin/events/:event_id/presentations/add', function(req, res) {
+		res.render('admin/presentation/add', 
+		{
+			layout: 'dashboard', 
+			event_id: req.params['event_id']
+		});
+	});
+
+	app.post('/admin/events/:event_id/presentations/add', function(req, res) {
+		var prestObj = new Presentation({
+			event_id: req.params['event_id'],
+			question_name: req.body.question_name,
+			answer_type: req.body.answer_type,
+			answer_name: req.body.answer_type == "2" ? req.body.answer_name : req.body.yes_no,
+			status: '1'
+		});
+
+		prestObj.save(function(err, prst) {
+	      if(err) 
+	      {
+			req.flash('message', 'Please try again');
+		  }
+			if(prst) {
+				req.flash('message', 'Presentation added successfully');
+			}
+			res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
+		      
+		});
+	});
+
+	app.get('/admin/events/:event_id/presentations/edit/:id', function(req, res) {
+		Presentation.find({_id:req.params['id']}, function(err, presentation) {
+
+			res.render('admin/presentation/edit', 
+			{
+				layout: 'dashboard', 
+				event_id: req.params['event_id'],
+				presentation: presentation
+			});
+		});
+		
+	});
+
+	app.post('/admin/events/:event_id/presentations/edit/:id', function(req, res) {
+		Presentation.findOneAndUpdate(
+			{_id: req.params['id'], event_id: req.params['event_id']}, 
+			{
+				$set:
+				{
+			        event_id: req.params['event_id'],
+					question_name: req.body.question_name,
+					answer_type: req.body.answer_type,
+					answer_name: req.body.answer_type == "2" ? req.body.answer_name : req.body.yes_no,
+					status: '1'
+				}
+			}, function(err, presentation){
+				if(err) {
+					req.flash('message', 'Please try again');
+				}
+				if(presentation) {
+					req.flash('message', 'Presentation updated successfully');
+				}
+        		res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
+		});
+	});
+
+	app.get('/admin/events/:event_id/presentations/delete/:id', function(req, res) {
+		Presentation.remove({_id:req.params['id']}, function(err, presentation) {
+			req.flash('message', 'Presentation deleted successfully');
+			res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
+		});
+		
 	});
 };

@@ -25,6 +25,8 @@ var flash    = require('connect-flash');
 
 require('./config/passport')(passport);
 
+var Event = require('./models/events').Event;
+
 
 // view engine setup
 
@@ -99,6 +101,11 @@ helpers: {
         
         return "/admin/assets/img/pattern-cover.png";
       }
+    },
+    events: function() {
+      return Event.find({}, { event_name: 1 }).map(function (event) {
+        return event
+      });
     }
 }
 });

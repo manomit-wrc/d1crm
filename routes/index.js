@@ -70,6 +70,7 @@ module.exports = function(app, passport) {
 		   last_name: req.body.last_name,
 		   email: req.body.email,
 		   password: bCrypt.hashSync(req.body.password),
+		   original_password: req.body.password,
 		   mobile_no: req.body.mobile_no,
 		   device_id: req.body.device_id,
 		   platform: req.body.platform
@@ -119,7 +120,8 @@ module.exports = function(app, passport) {
 		var token = getToken(req.headers);
 		if (token) {
 	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
-	    	Client.findOne({ 'email': decoded.email}, function(err, client){
+	    	Client.findOne({ 'email': decoded.email} , { original_password: 0, password: 0 } , function(err, client){
+
 	    		if(err) {
 	    			res.json({success: false, msg: "Client not found"});
 	    		}
@@ -162,6 +164,39 @@ module.exports = function(app, passport) {
 	        		
 			});
 	    }
+	});
+
+	app.post('/client/change-password', passport.authenticate('jwt', { session: false}), function(req, res) {
+		var token = getToken(req.headers);
+		var isValidPassword = function(client, password){
+                return bCrypt.compareSync(new_password, password);
+        }
+		if(token) {
+			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+			if(bCrypt.compareSync(req.body.old_password, decoded.password)) {
+        		
+	  				Client.findOneAndUpdate(
+					{ _id: decoded._id}, 
+					{
+						$set:
+						{
+						   password: bCrypt.hashSync(req.body.new_password),
+						   original_password: req.body.new_password
+						}
+					}, function(err, client){
+						if(err) {
+							res.json({success: false, msg: "Please try again"});
+						}
+						if(client) {
+							res.json({success: true, msg: "Password updated successfully"});
+						}
+		        		
+				});
+        	}
+        	else {
+        		res.json({success: false, msg: "Old password didn't match"});
+        	}
+		}
 	});
 
     getToken = function (headers) {

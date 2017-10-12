@@ -1,0 +1,145 @@
+<div id="content" class="content">
+			<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/events">Event</a></li>
+        <li><a href="/admin/events/{{event_id}}/presentations">Presentations</a>
+		<li class="active">Add</li>
+	</ol>
+	
+	<div class="row">
+	    <div class="col-md-12">
+	        <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    {{!-- <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                    </div> --}}
+                    <h4 class="panel-title">Presentation - Add</h4>
+                </div>
+                <div class="panel-body">
+                    
+                    <form class="form-horizontal" id="frmPresentation" name="frmPresentation" method="POST" action="/admin/events/{{event_id}}/presentations/add" >
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Question</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter question"  name="question_name" id="question_name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Answer Type</label>
+                            <div class="col-md-9">
+                                <select name="answer_type" id="answer_type" class="form-control">
+                                    <option value="1">YES/NO</option>
+                                    <option value="2">DESCRIPTION</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_answer_desc">
+                            <label class="col-md-3 control-label">Answer</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter answer name" rows="5" name="answer_name" id="answer_name"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_answer_yes_no">
+                            <label class="col-md-3 control-label">Answer</label>
+                            <div class="col-md-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="yes_no" value="YES" checked="">
+                                    YES
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="yes_no" value="NO">
+                                    NO
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+    </div>
+          
+</div>
+<style type="text/css">
+.error {
+    text-align: left!important;
+    color: #f00;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $("#div_answer_yes_no").show();
+        $("#div_answer_desc").hide();
+
+        $("#answer_type").change(function(e){
+            if($(this).val() == "1") {
+                $("#div_answer_yes_no").show();
+                $("#div_answer_desc").hide();
+            }
+            else {
+                $("#div_answer_yes_no").hide();
+                $("#div_answer_desc").show();
+            }
+        });
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+           $("#success-alert").slideUp(500);
+        });
+
+        $("#frmPresentation").validate({
+            rules: {
+                question_name: {
+                    required: true
+                },
+                answer_type: {
+                    required: true
+                },
+                answer_name: {
+                    required: true
+                },
+                event_address: {
+                    required: true
+                },
+                event_image: {
+                    extension: 'jpg|png'
+                }
+            },
+            messages: {
+                question_name: {
+                    required: "Please enter question"
+                },
+                answer_type: {
+                    required: "Please select answer type"
+                },
+                answer_name: {
+                    required: "Please enter answer"
+                },
+                event_address: {
+                    required: "Please enter event address"
+                },
+                event_image: {
+                    extension: 'File type must be jpg or png'
+                }
+            },
+            submitHandler:function(form) {
+                form.submit();
+            }
+        });
+
+    });
+</script>
