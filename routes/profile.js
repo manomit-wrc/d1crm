@@ -42,12 +42,13 @@ var multer  = require('multer');
 app.get('/admin/profile/edit', function(req, res) {
 		User.findOne(function(err, obj){
 			var msg = req.flash('message')[0];
+			console.log(obj);
 			res.render('admin/profile/edit',{layout:'dashboard',message: msg,profile: obj});
 		});
 		
 	});
 
-app.post('/admin/profile/update',upload.single('event_image') ,function(req, res){
+app.post('/admin/profile/update',upload.single('profile_image') ,function(req, res){
 
 		User.findOneAndUpdate(
 			{_id: req.body._id}, 
@@ -87,9 +88,9 @@ app.post('/admin/profile/update',upload.single('event_image') ,function(req, res
 		   var user_id = req.body._id;
 		   var pwd=req.user.password;
 		   console.log(oldPwd);
-		   console.log(req.user.password);
-		   //console.log(passport.authenticate);
-      if(pwd==bCrypt(oldPwd))
+		   console.log(Crypt(req.user.password));
+		   //console.log(bCrypt(oldPwd));
+      /*if(pwd==bCrypt(oldPwd))
 	   {
               if(oldPwd==newPwd)
                {
@@ -128,7 +129,7 @@ app.post('/admin/profile/update',upload.single('event_image') ,function(req, res
       {
       	req.flash('message', 'Old password does not match with original password');
       }
-
+*/
 
 
 
