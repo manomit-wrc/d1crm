@@ -5,14 +5,11 @@ module.exports = function(app, passport) {
 	var Client = require("../models/client").Client;
 
 	var bCrypt = require('bcrypt-nodejs');
-<<<<<<< HEAD
-      
-      //console.log(bCrypt);
-=======
+
 
 	var jwt = require('jwt-simple');
 
->>>>>>> 7962faedbdb74a5f0ea707ad2b7c754a4d391bc3
+
 	// =====================================
 	// Login PAGE (with login links) ========
 	// =====================================

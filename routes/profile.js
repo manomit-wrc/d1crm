@@ -88,7 +88,7 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
 		   var user_id = req.body._id;
 		   var pwd=req.user.password;
 		   console.log(oldPwd);
-		   console.log(Crypt(req.user.password));
+		   //console.log(Crypt(req.user.password));
 		   //console.log(bCrypt(oldPwd));
       /*if(pwd==bCrypt(oldPwd))
 	   {
