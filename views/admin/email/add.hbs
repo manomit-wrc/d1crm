@@ -1,0 +1,122 @@
+<div id="content" class="content">
+			<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/email">Email</a></li>
+		<li class="active">Add</li>
+	</ol>
+	
+	<div class="row">
+	    <div class="col-md-12">
+	        <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    {{!-- <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                    </div> --}}
+                    <h4 class="panel-title">Email - Add</h4>
+                </div>
+                <div class="panel-body">
+
+                    {{#if message}}
+                        <div class="alert alert-success" id="success-alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <strong>Success! </strong>
+                            {{message}}
+                        </div>
+          
+                    {{/if}}
+                    
+                    <form class="form-horizontal" id="frmemail" name="frmemail" method="POST" action="/admin/email/create">
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Event Name</label>
+                            <div class="col-md-9">
+                                <select name="event_name" id="event_name" class="form-control">
+                                  <option value="">Please Select</option>
+                                  {{#each emails}}
+                                  <option value="{{this.event_name}}">{{this.event_name}}</option>
+                                  {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                       
+                     
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Text</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter sms description" rows="5" name="description" id="description"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Status</label>
+                            <div class="col-md-9">
+                                <select name="status" id="status" class="form-control">
+                                   <option value="1">Active</option>
+                                   <option value="0">Inactive</option>
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+    </div>
+          
+</div>
+<style type="text/css">
+.error {
+    text-align: left!important;
+    color: #f00;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+           $("#success-alert").slideUp(500);
+        });
+
+        $("#frmemail").validate({
+            rules: {
+                event_name: {
+                    required: true
+                },
+                description: {
+                    required: true
+                },
+                status: {
+                    required: true
+                }
+            },
+            messages: {
+                event_name: {
+                    required: "Please select event name"
+                },
+                description: {
+                    required: "Please enter description"
+                },
+                status: {
+                    required: "Please select address"
+                }
+            },
+            submitHandler:function(form) {
+                form.submit();
+            }
+        });
+
+    });
+</script>

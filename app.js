@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-
+var Event = require('./models/events').Event;
 
 var exphbs  = require('express-handlebars');
 
@@ -100,7 +100,8 @@ helpers: {
         return "/admin/assets/img/pattern-cover.png";
       }
     }
-}
+ }
+
 });
 app.engine('.hbs', hbs.engine);
 app.set('view engine', 'hbs');
@@ -151,6 +152,8 @@ app.use(function(req, res, next){
 require('./routes/dashboard')(app);
 require('./routes/events')(app);
 require('./routes/profile')(app);
+require('./routes/sms')(app);
+require('./routes/email')(app);
 
 // catch 404 and forward to error handler
 
