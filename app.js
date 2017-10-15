@@ -99,6 +99,15 @@ helpers: {
         
         return "/admin/assets/img/pattern-cover.png";
       }
+    },
+    product_img: function(value, options) {
+      if (fs.existsSync("public/product/"+value) && value != "") {
+        return "/product/"+value;
+      }
+      else {
+        
+        return "/admin/assets/img/pattern-cover.png";
+      }
     }
  }
 
@@ -154,6 +163,7 @@ require('./routes/events')(app);
 require('./routes/profile')(app);
 require('./routes/sms')(app);
 require('./routes/email')(app);
+require('./routes/product')(app);
 
 // catch 404 and forward to error handler
 

@@ -2,7 +2,7 @@
 			<!-- begin breadcrumb -->
 	<ol class="breadcrumb pull-right">
 		<li><a href="/admin/dashboard">Dashboard</a></li>
-        <li><a href="/admin/events">Event</a></li>
+        <li><a href="/admin/product">Product</a></li>
 		<li class="active">Add</li>
 	</ol>
 	
@@ -17,45 +17,48 @@
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
                     </div> --}}
-                    <h4 class="panel-title">Event - Add</h4>
+                    <h4 class="panel-title">Product - Add</h4>
                 </div>
                 <div class="panel-body">
                     
-                    <form class="form-horizontal" id="frmEvents" name="frmEvents" method="POST" action="/admin/events/add" enctype="multipart/form-data">
+                    <form class="form-horizontal" id="frmProduct" name="frmProduct" method="POST" action="/admin/product/add" enctype="multipart/form-data">
                         
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Code</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Enter product code"  name="code" id="code"  />
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-md-3 control-label">Name</label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" placeholder="Enter event name"  name="event_name" id="event_name"  />
+                                <input type="text" class="form-control" placeholder="Enter product name"  name="name" id="name"  />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Description</label>
+                            <div class="col-md-9">
+                                <textarea name="description" id="description" class="form-control" placeholder="Enter product description"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Date</label>
+                            <label class="col-md-3 control-label">Quantity</label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" placeholder="Enter event date"  name="event_date" id="event_date" />
+                                <input type="number" class="form-control" placeholder="Enter product quantity"  name="quantity" id="quantity"  />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Time</label>
+                            <label class="col-md-3 control-label">Price</label>
                             <div class="col-md-9">
-                                <div class="input-group date" id="datetimepicker2">
-                                    <input type="text" class="form-control" name="event_time" id="event_time" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-time"></span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Place</label>
-                            <div class="col-md-9">
-                                <textarea class="form-control" placeholder="Enter event address" rows="5" name="event_address" id="event_address"></textarea>
+                                <input type="number" class="form-control" placeholder="Enter product price"  name="price" id="price"  />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Image</label>
                             <div class="col-md-9">
-                                <input type="file" class="form-control"  name="event_image" id="event_image" class="image"/>
+                                <input type="file" class="form-control"  name="image" id="image" class="image" />
                                 <img src="/admin/assets/img/pattern-cover.png" id="img_preview" class="img-responsive" width="100px" height="100px">
                             </div>
                         </div>
@@ -88,39 +91,45 @@
            $("#success-alert").slideUp(500);
         });
 
-        $("#frmEvents").validate({
+        $("#frmProduct").validate({
             rules: {
-                event_name: {
+                name: {
                     required: true
                 },
-                event_date: {
+                code: {
                     required: true
                 },
-                event_time: {
+                description: {
                     required: true
                 },
-                event_address: {
+                quantity: {
                     required: true
                 },
-                event_image: {
+                price: {
+                    required: true
+                },
+                image: {
                     extension: 'jpg|png'
                 }
             },
             messages: {
-                event_name: {
-                    required: "Please enter event name"
+                name: {
+                    required: "Please enter product name"
                 },
-                event_date: {
-                    required: "Please enter event date"
+                code: {
+                    required: "Please enter product code"
                 },
-                event_time: {
-                    required: "Please enter event time"
+                description: {
+                    required: "Please enter product description"
                 },
-                event_address: {
-                    required: "Please enter event address"
+                quantity: {
+                    required: "Please enter product quantity"
                 },
-                event_image: {
-                    extension: 'File type must be jpg or png'
+                price: {
+                    required: "Please enter product price"
+                },
+                image: {
+                    extension: 'Image type must be jpg or png'
                 }
             },
             submitHandler:function(form) {
