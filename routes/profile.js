@@ -1,8 +1,13 @@
 module.exports = function(app,passport) {
 var User = require('../models/user').User;
 
+var Client = require("../models/client").Client;
+var LocalStrategy   = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
-var session  = require('express-session');
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
+var jwt = require('jwt-simple');
+//var session  = require('express-session');
 
 var multer  = require('multer');
 	var im = require('imagemagick');
@@ -80,61 +85,68 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
 	res.render('admin/profile/changepassword',{layout:'dashboard'});
  });
 
- app.post('/admin/profile/change_password' ,function(req, res){
+ app.post('/admin/profile/change_password' ,function(req,res){
 
 		   var oldPwd=req.body.old_password;
 		   var newPwd=req.body.new_password;
 		   var confPwd=req.body.confirm_password;
-		   var user_id = req.body._id;
+		   var user_id = req.user._id;
 		   var pwd=req.user.password;
-		   console.log(oldPwd);
-		   //console.log(Crypt(req.user.password));
-		   //console.log(bCrypt(oldPwd));
-      /*if(pwd==bCrypt(oldPwd))
-	   {
-              if(oldPwd==newPwd)
-               {
-					req.flash('message', 'Old password should be different with new password');
-					
-               }
-               else
-               {
-                    if(confPwd==newPwd)
-                     {
-                      User.findOneAndUpdate(
-						{_id: req.user._id}, 
-						{
-							$set:
-							{
-								password:bCrypt(oldPwd)
-								
-							}
-						}, {new: true}, function(err, doc){
-							if(err) {
-								req.flash('message', 'Please try again');
-							}
-							if(doc) {
-								req.flash('message', 'Password updated successfully');
-							}
-			        		res.redirect('/admin/profile/changepassword');
-					}); 
-                  }
-                  else
-                  {
-                  	req.flash('message', 'New password should be same with confirm password');
-                  }
-               }
-      }
-      else
-      {
-      	req.flash('message', 'Old password does not match with original password');
-      }
-*/
+           var old_pwd=bCrypt.hashSync(oldPwd);
+		   
+		   var isValidPassword = function(user, password){
+                return bCrypt.compareSync(oldPwd, req.user.password);
+            }
+               
+              if (!isValidPassword(req.user, oldPwd)){
+                   //return done(null, false, 
+                      //req.flash('message', 'Invalid Password'));
+                      console.log('pwd not match')
+                      //res.json({message: 'Password does not match with original password'});
+                     req.flash('message', 'Password does not match with original password');
+                     res.redirect('/admin/profile/changepassword');
+                }
+                else
+                {
+                	if(oldPwd==newPwd)
+                	{
+                        console.log('new pwd match oldpwd');
 
-
-
-		
-	});
+                        //req.flash('message', 'new password should be different from old password');
+                        //res.redirect('/admin/profile/changepassword');
+                	}
+                	else
+                	{
+                		 if(confPwd==newPwd)
+                		 {
+                             User.findOneAndUpdate(
+								{_id: req.user._id}, 
+								{
+									$set:
+									{
+										password:bCrypt.hashSync(req.body.new_password)
+										
+									}
+								}, {new: true}, function(err, doc){
+									if(err) {
+										req.flash('message','Please try again');
+									}
+									if(doc) {
+										req.flash('message','Password updated successfully');
+									}
+					        		res.redirect('/admin/profile/changepassword');
+							}); 
+                		 }
+                		 else
+                		 {
+                		 	console.log('new pwd diff conf');
+                		 	req.flash('message', 'new password should be same with conf. password');
+                            res.redirect('/admin/profile/changepassword');
+                		 }
+                	}
+                }
+      
+      });
 
 
 };
