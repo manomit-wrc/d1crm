@@ -4,11 +4,16 @@ module.exports = function(app, passport) {
 
 	var Client = require("../models/client").Client;
 
+	var Product = require("../models/product").Product;
+
 	var bCrypt = require('bcrypt-nodejs');
 
 
 	var jwt = require('jwt-simple');
 
+	var url = require('url');
+
+	var fs = require('fs');
 
 	// =====================================
 	// Login PAGE (with login links) ========
@@ -92,6 +97,7 @@ module.exports = function(app, passport) {
     	var isValidPassword = function(client, password){
                 return bCrypt.compareSync(new_password, password);
         }
+
         
     	Client.findOne({ 'email' :  req.body.email }, 
               function(err, client) {
@@ -196,6 +202,78 @@ module.exports = function(app, passport) {
         	else {
         		res.json({success: false, msg: "Old password didn't match"});
         	}
+		}
+	});
+
+	app.get('/client/products', passport.authenticate('jwt', { session: false }), function(req, res) {
+		var token = getToken(req.headers);
+		var hostname = req.headers.host;
+  		var productArr = new Array();
+  		var imageName = "";
+		if(token) {
+			Product.find({}, function(err, products) {
+				if(err) {
+					res.json({success: false, msg: "Please try again"});
+				}
+				if(products) {
+
+					for(var i=0; i<products.length; i++)
+					{
+						if (fs.existsSync("public/product/"+products[i].image) && products[i].image != "") {
+						imageName = "http://" + hostname + "/product/"+products[i].image;
+				        
+				        }
+					    else {
+					        imageName = "http://" + hostname + "/admin/assets/img/pattern-cover.png";
+					        
+					    }
+					    productArr.push({
+					    	_id: products[i]._id,
+					    	name: products[i].name,
+					    	code: products[i].code,
+					    	description: products[i].description,
+					    	quantity: products[i].quantity,
+					    	price: products[i].price,
+					    	image: imageName
+					    });
+					}
+					res.json({success: true, msg: "Product List", products:productArr});
+				}
+			});
+		}
+	});
+
+	app.get('/client/product/:id', passport.authenticate('jwt', { session: false }), function(req, res) {
+		var token = getToken(req.headers);
+		var hostname = req.headers.host;
+  		var productArr = new Array();
+  		var imageName = "";
+		if(token) {
+			Product.find({_id: req.params['id']}, function(err, product) {
+				if(err) {
+					res.json({success: false, msg: "Please try again"});
+				}
+				if(product) {
+					if (fs.existsSync("public/product/"+product[0].image) && product[0].image != "") {
+						imageName = "http://" + hostname + "/product/"+product[0].image;
+				        
+			        }
+				    else {
+				        imageName = "http://" + hostname + "/admin/assets/img/pattern-cover.png";
+				        
+				    }
+				    productArr.push({
+				    	_id: product[0]._id,
+				    	name: product[0].name,
+				    	code: product[0].code,
+				    	description: product[0].description,
+				    	quantity: product[0].quantity,
+				    	price: product[0].price,
+				    	image: imageName
+				    });
+					res.json({success: true, msg: "Product List", product:productArr});
+				}
+			});
 		}
 	});
 
