@@ -44,7 +44,9 @@
                                 <td>{{this.event_id}}</td>
                                 <td>{{this.text}}</td>
                                 <td>
-                                    {{#if  'this.status 0' }} active  {{/if }}
+                                
+                                    {{#if (eq this.status "1")}} active {{/if}}
+                                    {{#if (eq this.status "0")}} In-active {{/if}}
                                 </td>
                                 <td>
                                     <a title="Edit" href="/admin/sms/edit/{{this._id}}" class="btn btn-primary btn-sm m-r-5"><i class="fa fa-pencil"></i></a>
@@ -65,4 +67,6 @@
     </div>
     <!-- end row -->
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"></script>
+<script src="/try/examples/js/handlebars_helpers_if_eq.js"></script>
 

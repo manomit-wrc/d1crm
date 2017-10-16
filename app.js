@@ -102,10 +102,21 @@ helpers: {
         return "/admin/assets/img/pattern-cover.png";
       }
     },
+
     events: function() {
       return Event.find({}, { event_name: 1 }).map(function (event) {
         return event
       });
+    },
+    profile_src: function(value, options) {
+      if (fs.existsSync("public/profile/"+value) && value != "") {
+        return "/profile/"+value;
+      }
+      else {
+        
+        return "/admin/assets/img/pattern-cover.png";
+      }
+
     },
     product_img: function(value, options) {
       if (fs.existsSync("public/product/"+value) && value != "") {
@@ -150,8 +161,8 @@ app.use(function(req, res, next){
   {
 
     delete req.user.password;
-    if (fs.existsSync("public/profile/thumbs/"+req.user.avator) && req.user.avator != "") {
-      res.locals.image = "/profile/thumbs/"+req.user.avator;
+    if (fs.existsSync("public/profile/"+req.user.avator) && req.user.avator != "") {
+      res.locals.image = "/profile/"+req.user.avator;
     }
     else {
       //res.locals.image = "/user2-160x160.jpg";
