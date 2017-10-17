@@ -47,7 +47,7 @@ var multer  = require('multer');
 app.get('/admin/profile/edit', function(req, res) {
 		User.findOne(function(err, obj){
 			var msg = req.flash('message')[0];
-			console.log(obj);
+			
 			res.render('admin/profile/edit',{layout:'dashboard',message: msg,profile: obj});
 		});
 		
@@ -82,7 +82,8 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
 	});
 
  app.get('/admin/profile/changepassword', function(req, res) {
-	res.render('admin/profile/changepassword',{layout:'dashboard'});
+ 	var msg = req.flash('message')[0];
+	res.render('admin/profile/changepassword',{layout:'dashboard', message: msg});
  });
 
  app.post('/admin/profile/change_password' ,function(req,res){
