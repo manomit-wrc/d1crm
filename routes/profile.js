@@ -101,7 +101,7 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
               if (!isValidPassword(req.user, oldPwd)){
                    //return done(null, false, 
                       //req.flash('message', 'Invalid Password'));
-                      console.log('pwd not match')
+                      //console.log('pwd not match')
                       //res.json({message: 'Password does not match with original password'});
                      req.flash('message', 'Password does not match with original password');
                      res.redirect('/admin/profile/changepassword');
@@ -110,10 +110,10 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
                 {
                 	if(oldPwd==newPwd)
                 	{
-                        console.log('new pwd match oldpwd');
+                        //console.log('new pwd match oldpwd');
 
-                        //req.flash('message', 'new password should be different from old password');
-                        //res.redirect('/admin/profile/changepassword');
+                        req.flash('message', 'new password should be different from old password');
+                        res.redirect('/admin/profile/changepassword');
                 	}
                 	else
                 	{
@@ -139,8 +139,8 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
                 		 }
                 		 else
                 		 {
-                		 	console.log('new pwd diff conf');
-                		 	req.flash('message', 'new password should be same with conf. password');
+                		 	//console.log('new pwd diff conf');
+                		 	req.flash('message', 'new password should be same with confirm password');
                             res.redirect('/admin/profile/changepassword');
                 		 }
                 	}

@@ -39,7 +39,7 @@
                                 <select name="event_name" id="event_name" class="form-control">
                                   <option value="">Please Select</option>
                                   {{#each events}}
-                                  <option value="{{this.event_name}}" {{#if (eq emaildata.0.event_id "My Third Event")}} selected {{/if}} >{{this.event_name}}</option>
+                                  <option value="{{this.event_name}}" {{#if (eq this.event_name ../emaildata.0.event_id)}} selected="selected" {{/if}} >{{this.event_name}}</option>
                                   {{/each}}
                                 </select>
                             </div>
