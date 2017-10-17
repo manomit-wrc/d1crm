@@ -47,16 +47,16 @@ app.get('/admin/email/add', function(req, res) {
  	    
 		Email_template.find({_id: req.params['id']}, function(err, obj){
              //console.log(obj);
-			res.render('admin/sms/edit',{layout:'dashboard', emaildata:obj,events:obj1});
+			res.render('admin/email/edit',{layout:'dashboard', emaildata:obj,events:obj1});
 		});
 
 	});
 
 	});
 
- /*app.post('/admin/sms/update/:id', function(req, res) {
+ app.post('/admin/email/update/:id', function(req, res) {
 		
-		Sms_template.findOneAndUpdate(
+		Email_template.findOneAndUpdate(
 			{_id: req.params['id']}, 
 			{
 				$set:
@@ -71,18 +71,18 @@ app.get('/admin/email/add', function(req, res) {
 					req.flash('message', 'Please try again');
 				}
 				if(doc) {
-					req.flash('message', 'Sms updated successfully');
+					req.flash('message', 'Email updated successfully');
 				}
-        		res.redirect('/admin/sms');
+        		res.redirect('/admin/email');
 		});
-	});*/
+	});
 
-/* app.get('/admin/sms/delete/:id', function(req, res) {
-		Sms_template.remove({_id: req.params['id']}, function(err, event) {
-			req.flash('message', 'Sms deleted successfully');
-			res.redirect('/admin/sms');
+ app.get('/admin/email/delete/:id', function(req, res) {
+		Email_template.remove({_id: req.params['id']}, function(err, event) {
+			req.flash('message', 'Email deleted successfully');
+			res.redirect('/admin/email');
 		});
-	});*/
+	});
 
 
 };

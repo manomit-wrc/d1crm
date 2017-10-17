@@ -39,6 +39,7 @@
                                 <select name="event_name" id="event_name" class="form-control">
                                   <option value="">Please Select</option>
                                   {{#each events}}
+
                                   <option value="{{this.event_name}}" {{#if (eq smsdata.0.event_id "this.event_name")}} selected {{/if}} >{{this.event_name}}</option>
                                   {{/each}}
                                 </select>
