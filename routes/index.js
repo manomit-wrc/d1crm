@@ -15,9 +15,41 @@ module.exports = function(app, passport) {
 
 	var fs = require('fs');
 
+	var FCM = require('fcm-node');
+    var serverKey = 'AAAAUdnMgPw:APA91bEW2wNomqp3O6XdAY1GEb8M3LSFlVaI5wy5GpvhOs_jo7t1A1UVP0LD_qX3uRu-bjj0Aghcd8v96MxCfxLi3MlVhBrvfpDSGj9QNpPar8EtLrxnN52WEcscujnJ5BgP1_adeTs-'; //put your server key here 
+    var fcm = new FCM(serverKey);
+
 	// =====================================
 	// Login PAGE (with login links) ========
 	// =====================================
+
+
+	app.get('/test_noti', function(req, res) {
+		var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+        to: 'lal-QvtICOs:APA91bEa8Fs43DaBRlb04wAu0L6pzsWetKba-QrerTdcfqbyofgxcPeSgbSL07o31LZQVCrYH3awdqyYpgbByD_7wkRnRI9z3dPPY20aP3IA8Y4j_R277AiWANouV7bXU5ccyV5KLQJA', 
+        collapse_key: 'green',
+        
+        notification: {
+            title: 'Test', 
+            body: 'Test' 
+        },
+        
+        data: {  //you can send only notification or only data(or include both) 
+            my_key: 'my value',
+            my_another_key: 'my another value'
+        }
+    };
+    
+    fcm.send(message, function(err, response){
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfully sent with response: ", response);
+        }
+    });
+	});
+
+
 	app.get('/admin', function(req, res) {
 
 		var msg = req.flash('loginMessage')[0];
@@ -77,7 +109,6 @@ module.exports = function(app, passport) {
 		   password: bCrypt.hashSync(req.body.password),
 		   original_password: req.body.password,
 		   mobile_no: req.body.mobile_no,
-		   device_id: req.body.device_id,
 		   platform: req.body.platform
   		});
 
@@ -111,6 +142,7 @@ module.exports = function(app, passport) {
                 else {
                 	if(bCrypt.compareSync(req.body.password, client.password)) {
                 		var token = jwt.encode(client, "W$q4=25*8%v-}UW");
+
 		  				res.json({success: true, token: 'Bearer ' + token});
                 	}
                 	else {
@@ -122,8 +154,34 @@ module.exports = function(app, passport) {
         );
     });
 
+    app.post('/client/fcm_update', function(req, res) {
+    	var token = getToken(req.headers);
+    	if (token) {
+	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+	    	Client.findOneAndUpdate(
+				{ _id: decoded._id}, 
+				{
+					$set:
+					{
+					   device_id: req.body.device_id
+					}
+				}, function(err, client){
+					if(err) {
+						res.json({success: false, msg: "Please try again"});
+					}
+					if(client) {
+						res.json({success: true, msg: "Device updated successfully"});
+					}
+	        		
+			});
+	    }
+    });
+
     app.get('/client/profile', passport.authenticate('jwt', { session: false}), function(req, res) {
 		var token = getToken(req.headers);
+		var clientArr = new Array();
+		var clientImage = '';
+		var hostname = req.headers.host;
 		if (token) {
 	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
 	    	Client.findOne({ 'email': decoded.email} , { original_password: 0, password: 0 } , function(err, client){
@@ -132,7 +190,28 @@ module.exports = function(app, passport) {
 	    			res.json({success: false, msg: "Client not found"});
 	    		}
 	    		else {
-	    			res.json({success: true, client: client});
+    				if (fs.existsSync("public/profile/"+client.image) && client.image != "") {
+						imageName = "http://" + hostname + "/profile/"+client.image;
+			        
+			        }
+				    else {
+				        imageName = "http://" + hostname + "/admin/assets/img/user-13.jpg";
+				        
+				    }
+				    clientArr.push({
+				    	_id: client._id,
+				    	first_name: client.first_name,
+				    	last_name: client.last_name,
+				    	email: client.email,
+				    	mobile_no: client.mobile_no,
+				    	pincode: client.pincode,
+				    	city_name: client.city_name,
+				    	state_name: client.state_name,
+				    	country_name: client.country_name,
+				    	address: client.address,
+				    	image: imageName
+				    });
+	    			res.json({success: true, client: clientArr});
 	    		}
 	    		
 	    	});
