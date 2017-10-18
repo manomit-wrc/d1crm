@@ -81,9 +81,31 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
 		
 	});
 
+
+
  app.get('/admin/profile/changepassword', function(req, res) {
  	var msg = req.flash('message')[0];
 	res.render('admin/profile/changepassword',{layout:'dashboard', message: msg});
+ });
+
+ app.post('/admin/profile/checkchangepassword', function(req, res) {
+	
+	var chk_pwd=req.body.oldPwd;
+	//console.log(chk_pwd);
+	var isValidPassword = function(user, password){
+                return bCrypt.compareSync(chk_pwd, req.user.password);
+            }
+             
+            
+     if (!isValidPassword(req.user,chk_pwd)){
+     	res.json({data: "Password does not match with original password"})
+       }
+      else
+      {
+      	res.json({data: "verify"})
+      }
+ 	
+	
  });
 
  app.post('/admin/profile/change_password' ,function(req,res){
@@ -100,10 +122,7 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
             }
                
               if (!isValidPassword(req.user, oldPwd)){
-                   //return done(null, false, 
-                      //req.flash('message', 'Invalid Password'));
-                      //console.log('pwd not match')
-                      //res.json({message: 'Password does not match with original password'});
+                   
                      req.flash('message', 'Password does not match with original password');
                      res.redirect('/admin/profile/changepassword');
                 }
@@ -111,8 +130,6 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
                 {
                 	if(oldPwd==newPwd)
                 	{
-                        //console.log('new pwd match oldpwd');
-
                         req.flash('message', 'new password should be different from old password');
                         res.redirect('/admin/profile/changepassword');
                 	}
@@ -126,7 +143,6 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
 									$set:
 									{
 										password:bCrypt.hashSync(req.body.new_password)
-										
 									}
 								}, {new: true}, function(err, doc){
 									if(err) {
@@ -140,7 +156,7 @@ app.post('/admin/profile/update',upload.single('profile_image') ,function(req, r
                 		 }
                 		 else
                 		 {
-                		 	//console.log('new pwd diff conf');
+                		 	
                 		 	req.flash('message', 'new password should be same with confirm password');
                             res.redirect('/admin/profile/changepassword');
                 		 }
