@@ -1,0 +1,102 @@
+<div id="content" class="content">
+			<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/Payment/add">Payment Setting</a></li>
+		<li class="active">Add</li>
+	</ol>
+	
+	<div class="row">
+	    <div class="col-md-12">
+	        <!-- begin panel -->
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    {{!-- <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                    </div> --}}
+                    <h4 class="panel-title">Payment Setting</h4>
+                </div>
+                <div class="panel-body">
+
+                    {{#if message}}
+                        <div class="alert alert-success" id="success-alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <strong>Success! </strong>
+                            {{message}}
+                        </div>
+          
+                    {{/if}}
+                    
+                    <form class="form-horizontal" id="frmpayment" name="frmpayment" method="POST" action="/admin/Payment/create">
+                         <input type="hidden" id="payment_id" name="payment_id" value="{{paymentdata.0._id}}">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Paypal Content</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter paypal description" rows="5" name="paypal_description" id="paypal_description">{{paymentdata.0.paypal_description}}</textarea>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <label class="col-md-3 control-label">Judopay</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" placeholder="Enter judopay description" rows="5" name="judopay_description" id="judopay_description">{{paymentdata.0.judopay_description}}</textarea>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+    </div>
+          
+</div>
+<style type="text/css">
+.error {
+    text-align: left!important;
+    color: #f00;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+           $("#success-alert").slideUp(500);
+        });
+
+        $("#frmpayment").validate({
+            rules: {
+                paypal_description: {
+                    required: true
+                },
+                judopay_description: {
+                    required: true
+                }
+                
+            },
+            messages: {
+                paypal_description: {
+                    required: "Please Enter Paypal Details"
+                },
+                judopay_description: {
+                    required: "Please Enter Judopay Details"
+                }
+            },
+            submitHandler:function(form) {
+                form.submit();
+            }
+        });
+
+    });
+</script>
