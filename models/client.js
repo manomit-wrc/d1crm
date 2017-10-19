@@ -14,7 +14,8 @@ var clientSchema = new Schema({
 	state_name: {type:String, default: ''},
 	city_name: {type:String, default: ''},
 	pincode: {type:String, default: ''},
-	device_id: {type:String, required: 'Please provide device id'},
+	image: {type:String, default:''},
+	device_id: {type:String, default:''},
 	platform: {type:String, required: 'Please provide platform'}
 });
 
