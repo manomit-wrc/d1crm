@@ -19,6 +19,10 @@ module.exports = function(app, passport) {
     var serverKey = 'AAAAUdnMgPw:APA91bEW2wNomqp3O6XdAY1GEb8M3LSFlVaI5wy5GpvhOs_jo7t1A1UVP0LD_qX3uRu-bjj0Aghcd8v96MxCfxLi3MlVhBrvfpDSGj9QNpPar8EtLrxnN52WEcscujnJ5BgP1_adeTs-'; //put your server key here 
     var fcm = new FCM(serverKey);
 
+    var nodemailer = require('nodemailer');
+
+    var ForgotPassword = require('../models/forgot_password').ForgotPassword;
+
 	// =====================================
 	// Login PAGE (with login links) ========
 	// =====================================
@@ -354,6 +358,99 @@ module.exports = function(app, passport) {
 				}
 			});
 		}
+	});
+
+	app.post('/client/forgot-password', function(req, res) {
+		Client.findOne({ 'email' :  req.body.email }, 
+              function(err, client) {
+                // In case of any error, return using the done method
+                if (err)
+                  res.json({success: false, msg: 'Please try again'});
+                // Username does not exist, log error & redirect back
+                if (!client){
+                  res.json({success: false, msg: "Username didn't matched"});                
+                }
+                else {
+
+                	var random_otp = Math.floor(100000 + Math.random() * 900000);
+                	var newForgotPassword = new ForgotPassword({
+				       email: req.body.email,
+				       otp: random_otp
+			  		});
+
+			  		newForgotPassword.save(function(err, client) {
+					      if(err) {
+					         res.json({success: false, msg: 'Please try again'});
+					      }
+					      else {
+						      	nodemailer.createTestAccount(function(err, account){
+					        	var transporter = nodemailer.createTransport({
+								        host: 'smtp.gmail.com',
+								        port: 587,
+								        secure: false, // true for 465, false for other ports
+								        auth: {
+								            user: "wrctecpl@gmail.com", // generated ethereal user
+								            pass: "Parth0Sen"  // generated ethereal password
+								        }
+								    });
+
+					        	var mailOptions = {
+							        from: 'wrctecpl@gmail.com', // sender address
+							        to: req.body.email, // list of receivers
+							        subject: 'OTP', // Subject line
+							        text: 'There is your OTP', // plain text body
+							        html: '<b>'+random_otp+'</b>' // html body
+					    		};
+
+						    	transporter.sendMail(mailOptions, function (error, info){
+							        if (error) {
+							            res.json(error);
+							        }
+							        else {
+							        	res.json({success: true, msg: "An OTP has been sent to your email."});
+							        }
+							    });
+					        });
+					      }
+					      
+				  	});
+
+                	
+                }
+                
+              }
+        );
+	});
+
+	app.post('/client/reset-password', function(req, res) {
+		ForgotPassword.findOne({ 'otp' :  req.body.otp }, function(err, client) {
+			if(err) {
+				res.json({success: false, msg: 'Please try again.'});
+			}
+			if(!client) {
+				res.json({success: false, msg: 'OTP does not matched.'});
+			}
+			else {
+				
+		    	Client.findOneAndUpdate(
+					{ email: client.email}, 
+					{
+						$set:
+						{
+						   password: bCrypt.hashSync(req.body.new_password),
+						   original_password: req.body.new_password
+						}
+					}, function(err, client){
+						if(err) {
+							res.json({success: false, msg: "Please try again"});
+						}
+						if(client) {
+							res.json({success: true, msg: "Password change successfully"});
+						}
+		        		
+				});
+			}
+		})
 	});
 
     getToken = function (headers) {
