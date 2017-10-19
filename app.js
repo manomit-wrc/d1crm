@@ -183,6 +183,7 @@ require('./routes/profile')(app);
 require('./routes/sms')(app);
 require('./routes/email')(app);
 require('./routes/product')(app);
+require('./routes/payment')(app);
 
 // catch 404 and forward to error handler
 
