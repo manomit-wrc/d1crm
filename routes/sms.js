@@ -5,6 +5,7 @@ var Event = require('../models/events').Event;
 
 app.get('/admin/sms/', function(req, res) {
 		Sms_template.find({}, function(err, sms) {
+			console.log(sms);
 			res.render('admin/sms/',{layout:'dashboard',smsList:sms});
 		});
 		

@@ -26,7 +26,7 @@ app.post('/admin/Payment/create', function(req, res) {
         
         if(payment_id=="")
         {
-		var PaymentSetting = new Payment_Setting({
+		 var PaymentSetting = new Payment_Setting({
 	       paypal_description: req.body.paypal_description,
 		   judopay_description: req.body.judopay_description,
 		   

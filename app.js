@@ -200,6 +200,7 @@ require('./routes/sms')(app);
 require('./routes/email')(app);
 require('./routes/product')(app);
 require('./routes/payment')(app);
+require('./routes/clients')(app);
 
 // catch 404 and forward to error handler
 
