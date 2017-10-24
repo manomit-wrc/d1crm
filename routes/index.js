@@ -6,6 +6,8 @@ module.exports = function(app, passport) {
 
 	var Product = require("../models/product").Product;
 
+	var ProductCart = require("../models/product_cart").ProductCart;
+
 	var bCrypt = require('bcrypt-nodejs');
 
 
@@ -356,6 +358,87 @@ module.exports = function(app, passport) {
 				    });
 					res.json({success: true, msg: "Product List", product:productArr});
 				}
+			});
+		}
+	});
+
+	app.post('/client/product/add_to_cart', passport.authenticate('jwt', { session: false }), function(req, res) {
+		var token = getToken(req.headers);
+		if(token) {
+			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+			var newCart = new ProductCart({
+				product_id: req.body.product_id,
+				client_id: decoded._id,
+				quantity: req.body.quantity,
+				price: req.body.price,
+				added_date: new Date()
+			});
+
+			newCart.save(function(err, client) {
+			      if(err) {
+			         res.json({success: false, msg: 'Please try again'});
+			      }
+			      else {
+			      	
+			  		res.json({success: true, msg: 'Product added to cart successfully'});
+			      }
+		      
+	  		});	
+		}
+	});
+
+	app.post('/client/product/remove_cart', passport.authenticate('jwt', { session: false }), function(req, res) {
+		var token = getToken(req.headers);
+		if(token) {
+			 ProductCart.remove({_id: req.body.cart_id}, function(err, product_cart) {
+				res.json({success: true, msg: 'Product remove from cart successfully'});
+			});
+		}
+	});
+
+	app.get('/client/products/cart_list', passport.authenticate('jwt', { session: false }), function(req, res) {
+		var token = getToken(req.headers);
+		if(token) {
+			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+			 ProductCart.aggregate([
+			    {
+			      $lookup:
+			        {
+			          from: "products",
+			          localField: "product_id",
+			          foreignField: "_id",
+			          as: "products"
+			        }
+			   }
+			], function(err, product_list) {
+				var hostname = req.headers.host;
+		  		var productArr = new Array();
+		  		var imageName = "";
+				for(var i=0;i<product_list.length;i++) {
+					if(product_list[i].client_id == decoded._id) {
+					if (fs.existsSync("public/product/"+product_list[i].products[0].image) && product_list[i].products[0].image != "") {
+						imageName = "http://" + hostname + "/product/"+product_list[i].products[0].image;
+				        
+			        }
+				    else {
+				        imageName = "http://" + hostname + "/admin/assets/img/pattern-cover.png";
+				        
+				    }
+				    productArr.push({
+				    	cart_id: product_list[i]._id,
+				    	product_id: product_list[i].product_id,
+				    	product_name: product_list[i].products[0].name,
+				    	quantity: product_list[i].quantity,
+				    	price: product_list[i].price,
+				    	added_date: product_list[i].added_date,
+				    	image: imageName
+				    });
+					
+					}
+
+					
+				}
+				res.json({success: true, product_list: productArr});
 			});
 		}
 	});
