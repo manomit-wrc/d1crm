@@ -43,10 +43,7 @@
                                 <td>{{inc @index}}</td>
                                 <td>{{this.event_id}}</td>
                                 <td>{{this.text}}</td>
-                                <td>
-                                     {{#if (eq this.status "1")}} active {{/if}}
-                                    {{#if (eq this.status "0")}} In-active {{/if}}
-                                </td>
+                                
                                 <td>
                                     <a title="Edit" href="/admin/email/edit/{{this._id}}" class="btn btn-primary btn-sm m-r-5"><i class="fa fa-pencil"></i></a>
 

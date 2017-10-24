@@ -32,32 +32,26 @@
                         <thead>
                             <tr>
                                 <th>Sr. No</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile No.</th>
-                                <th>Platform</th>
-                                <th>Country Name</th>
-                                <th>State Name</th>
-                                <th>City Name</th>
+                                <th>Country</th>
+                                <th>State</th>
+                                <th>City</th>
                                 <th>Pincode</th>
-                                <th>Address</th>
                             </tr>
                         </thead>
                         <tbody>
                            {{#each clientList}}
                             <tr class="odd gradeX">
                                 <td>{{inc @index}}</td>
-                                <td>{{this.first_name}}</td>
-                                <td>{{this.last_name}}</td>
+                                <td>{{this.first_name}}&nbsp;{{this.last_name}}</td>
                                 <td>{{this.email}}</td>
                                 <td>{{this.mobile_no}}</td>
-                                <td>{{this.platform}}</td>
                                 <td>{{this.country_name}}</td>
                                 <td>{{this.state_name}}</td>
                                 <td>{{this.city_name}}</td>
                                 <td>{{this.pincode}}</td>
-                                <td>{{this.address}}</td>
                             </tr>
                             {{/each}}
                         </tbody>
