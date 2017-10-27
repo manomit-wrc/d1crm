@@ -1,6 +1,11 @@
 module.exports = function(app) {
 	var Event = require('../models/events').Event;
 	var Presentation = require('../models/presentations').Presentation;
+	var Client = require('../models/client').Client;
+
+	var FCM = require('fcm-node');
+    var serverKey = 'AAAAUdnMgPw:APA91bEW2wNomqp3O6XdAY1GEb8M3LSFlVaI5wy5GpvhOs_jo7t1A1UVP0LD_qX3uRu-bjj0Aghcd8v96MxCfxLi3MlVhBrvfpDSGj9QNpPar8EtLrxnN52WEcscujnJ5BgP1_adeTs-'; //put your server key here 
+    var fcm = new FCM(serverKey);
 
 	var multer  = require('multer');
 	var im = require('imagemagick');
@@ -139,7 +144,9 @@ module.exports = function(app) {
 	});
 
 	app.post('/admin/events/:event_id/presentations/add', function(req, res) {
-		var prestObj = new Presentation({
+
+      
+     var prestObj = new Presentation({
 			event_id: req.params['event_id'],
 			question_name: req.body.question_name,
 			answer_type: req.body.answer_type,
@@ -153,11 +160,51 @@ module.exports = function(app) {
 			req.flash('message', 'Please try again');
 		  }
 			if(prst) {
+
+             Client.find({}, function(err, clients) {
+
+               for(var i=0;i<clients.length;i++)
+	            {
+	            	
+	            	  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+					        to:clients[i].device_id, 
+					        collapse_key: 'green',
+					        
+					        notification: {
+					            title: 'D1 TEXT', 
+					            body: req.body.answer_name 
+					        },
+					        
+					        data: {  //you can send only notification or only data(or include both) 
+					            "description": req.body.answer_name,
+					            "statement_type": "1",
+					            "content-available": "1"
+					        }
+					    };
+
+					     fcm.send(message, function(err, response){
+					        if (err) {
+					            console.log(err);
+					        } else {
+					            console.log("Successfully sent with response: ", response);
+					        }
+					    });
+	            }
+
 				req.flash('message', 'Presentation added successfully');
+
+			});
+
 			}
 			res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
 		      
 		});
+
+
+     
+     
+
+
 	});
 
 	app.get('/admin/events/:event_id/presentations/edit/:id', function(req, res) {
