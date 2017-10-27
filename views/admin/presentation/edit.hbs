@@ -100,13 +100,19 @@
 
         $("#answer_type").change(function(e){
             if($(this).val() == "1") {
-                $("#div_answer_yes_no").show();
-                $("#div_answer_desc").hide();
+                 $("#div_answer_yes_no").hide();
+                $("#div_answer_desc").show();
+
+                //$("#div_answer_yes_no").show();
+                //$("#div_answer_desc").hide();
 
             }
             else {
+
                 $("#div_answer_yes_no").hide();
-                $("#div_answer_desc").show();
+                $("#div_answer_desc").hide();
+                //$("#div_answer_yes_no").hide();
+                //$("#div_answer_desc").show();
             }
         });
 
