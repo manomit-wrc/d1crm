@@ -150,7 +150,7 @@ module.exports = function(app) {
 			event_id: req.params['event_id'],
 			question_name: req.body.question_name,
 			answer_type: req.body.answer_type,
-			answer_name: req.body.answer_type == "2" ? req.body.answer_name : req.body.yes_no,
+			answer_name: req.body.answer_type == "2" ? req.body.answer_name : '',
 			status: '1'
 		});
 
@@ -171,8 +171,7 @@ module.exports = function(app) {
 					        collapse_key: 'green',
 					        
 					        notification: {
-					            title: 'D1 TEXT', 
-					            body: req.body.answer_name 
+					            title: 'D1 EVENT'
 					        },
 					        
 					        data: {  //you can send only notification or only data(or include both) 
