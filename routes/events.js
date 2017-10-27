@@ -148,8 +148,8 @@ module.exports = function(app, mongoose) {
 	});
 
 	app.post('/admin/events/:event_id/presentations/add', function(req, res) {
-
       
+
       var prestObj = new Presentation({
 			event_id: req.params['event_id'],
 			question_name: req.body.question_name,
@@ -225,6 +225,12 @@ module.exports = function(app, mongoose) {
 	});
 
 	app.post('/admin/events/:event_id/presentations/edit/:id', function(req, res) {
+
+		
+        var updateStatus=req.body.update;
+        var pushStatus=req.body.push;
+        if(updateStatus=="updt")
+        {
 		Presentation.findOneAndUpdate(
 			{_id: req.params['id'], event_id: req.params['event_id']}, 
 			{
@@ -233,7 +239,7 @@ module.exports = function(app, mongoose) {
 			        event_id: req.params['event_id'],
 					question_name: req.body.question_name,
 					answer_type: req.body.answer_type,
-					answer_name: req.body.answer_type == "2" ? req.body.answer_name : req.body.yes_no,
+					answer_name: req.body.answer_type == "1" ? req.body.answer_name : '',
 					status: '1'
 				}
 			}, function(err, presentation){
@@ -245,6 +251,72 @@ module.exports = function(app, mongoose) {
 				}
         		res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
 		});
+
+	  }
+	  else if(pushStatus=="push")
+	  {
+          
+          Presentation.findOneAndUpdate(
+			{_id: req.params['id'], event_id: req.params['event_id']}, 
+			{
+				$set:
+				{
+			        event_id: req.params['event_id'],
+					question_name: req.body.question_name,
+					answer_type: req.body.answer_type,
+					answer_name: req.body.answer_type == "1" ? req.body.answer_name : '',
+					status: '1'
+				}
+			}, function(err, presentation){
+				if(err) {
+					req.flash('message', 'Please try again');
+				}
+			if(presentation) {
+
+              Client.find({}, function(err, clients) {
+
+               for(var i=0;i<clients.length;i++)
+	            {
+	            	
+	            	  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+					        to:clients[i].device_id, 
+					        collapse_key: 'green',
+					        
+					        notification: {
+					            title: 'D1 EVENT'
+					        },
+					        
+					        data: {  //you can send only notification or only data(or include both)
+					            "question": req.body.question_name,
+					            "description": req.body.answer_type == "1" ? req.body.answer_name : '',
+					            "statement_type": req.body.answer_type,
+					            "content-available": "1"
+					        }
+					    };
+
+					     fcm.send(message, function(err, response){
+					        if (err) {
+					            console.log(err);
+					        } else {
+					            console.log("Successfully sent with response: ", response);
+					        }
+					    });
+	              }
+
+				   req.flash('message', 'Presentation added successfully');
+
+			      });
+
+                  req.flash('message', 'Presentation updated successfully');
+                  
+				}
+        		res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
+		   });
+
+
+	  }
+
+
 	});
 
 	app.get('/admin/events/:event_id/presentations/delete/:id', function(req, res) {
