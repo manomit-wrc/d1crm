@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function(app, mongoose) {
 	var Event = require('../models/events').Event;
 	var Presentation = require('../models/presentations').Presentation;
 	var Client = require('../models/client').Client;
@@ -122,8 +122,12 @@ module.exports = function(app) {
 		          foreignField: "_id",
 		          as: "presentation_docs"
 		        }
-		   }
+		   },
+		   {
+      			$match: { "event_id": { $in:[mongoose.Types.ObjectId(req.params['id'])] }}
+   		   }
 		], function(err, presentation) {
+			console.log(presentation);
 			var msg = req.flash('message')[0];
 			res.render('admin/presentation/index',
 				{

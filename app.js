@@ -194,7 +194,7 @@ app.use(function(req, res, next){
 });
 
 require('./routes/dashboard')(app);
-require('./routes/events')(app);
+require('./routes/events')(app, mongoose);
 require('./routes/profile')(app);
 require('./routes/sms')(app);
 require('./routes/email')(app);
