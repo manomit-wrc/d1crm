@@ -10,6 +10,8 @@ module.exports = function(app, passport) {
 
 	var bCrypt = require('bcrypt-nodejs');
 
+	var Order = require("../models/order").Order;
+
 
 	var jwt = require('jwt-simple');
 
@@ -32,7 +34,7 @@ module.exports = function(app, passport) {
 
 	app.get('/test_noti', function(req, res) {
 		var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-        to: 'lal-QvtICOs:APA91bEa8Fs43DaBRlb04wAu0L6pzsWetKba-QrerTdcfqbyofgxcPeSgbSL07o31LZQVCrYH3awdqyYpgbByD_7wkRnRI9z3dPPY20aP3IA8Y4j_R277AiWANouV7bXU5ccyV5KLQJA', 
+        to: 'm3Fco2ZL-q4:APA91bGxSqsTZH6f7hEsPqmjWYrHqG9ameeXJevfkx4YCOmsDsyqfhB4dbJmjUAhwYsEI09UfnuanviXmKZYMkluV-KTN6rn1FA6AkeAJ3CW_xuLFLQQR33EzqlYzLNT-XG1Z2lpDcAv', 
         collapse_key: 'green',
         
         notification: {
@@ -41,8 +43,9 @@ module.exports = function(app, passport) {
         },
         
         data: {  //you can send only notification or only data(or include both) 
-            my_key: 'my value',
-            my_another_key: 'my another value'
+            "my_key": 'my value',
+            "my_another_key": 'my another value',
+            "content-available": "1"
         }
     };
     
@@ -376,7 +379,7 @@ module.exports = function(app, passport) {
 
 			newCart.save(function(err, client) {
 			      if(err) {
-			         res.json({success: false, msg: 'Please try again'});
+			         res.json({success: false, msg: 'Please try again', err: err});
 			      }
 			      else {
 			      	
@@ -393,6 +396,52 @@ module.exports = function(app, passport) {
 			 ProductCart.remove({_id: req.body.cart_id}, function(err, product_cart) {
 				res.json({success: true, msg: 'Product remove from cart successfully'});
 			});
+		}
+	});
+
+	app.post('/client/product/place_order', passport.authenticate('jwt', { session: false}), function(req, res) {
+		var token = getToken(req.headers);
+		if(token) {
+			var invoice_no = Math.floor(100000 + Math.random() * 900000);
+			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+			var newOrder = new Order({
+				client_id: decoded._id,
+				invoice_no: invoice_no,
+				items: JSON.stringify(req.body)
+			});
+
+			newOrder.save(function(err, order) {
+				if(order) {
+					res.json({success: true, msg: 'Order placed successfully', invoice_no: invoice_no});
+				}
+			});
+		}
+	});
+
+	app.post('/client/product/confirm_order', passport.authenticate('jwt', { session: false}), function(req, res) {
+		var token = getToken(req.headers);
+		if(token) {
+			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+			var invoice_no = req.body.invoice_no;
+			var transaction_id = req.body.transaction_id;
+			Order.findOneAndUpdate(
+					{ invoice_no: invoice_no}, 
+					{
+						$set:
+						{
+						   status: '1',
+						   transaction_no: req.body.transaction_id
+						}
+					}, function(err, order){
+						var obj = JSON.parse(order.items);
+						for(var i=0;i<obj.length;i++) {
+							ProductCart.remove({_id: obj[i].cart_id}, function(err, product_cart) {
+								
+							});
+						}
+						setTimeout(function(){ res.json({success: true, msg: 'Order confirmed successfully'});}, 2000);
+		        		
+					});
 		}
 	});
 
