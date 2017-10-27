@@ -146,11 +146,11 @@ module.exports = function(app) {
 	app.post('/admin/events/:event_id/presentations/add', function(req, res) {
 
       
-     var prestObj = new Presentation({
+      var prestObj = new Presentation({
 			event_id: req.params['event_id'],
 			question_name: req.body.question_name,
 			answer_type: req.body.answer_type,
-			answer_name: req.body.answer_type == "2" ? req.body.answer_name : '',
+			answer_name: req.body.answer_type == "1" ? req.body.answer_name : '',
 			status: '1'
 		});
 
@@ -174,9 +174,10 @@ module.exports = function(app) {
 					            title: 'D1 EVENT'
 					        },
 					        
-					        data: {  //you can send only notification or only data(or include both) 
-					            "description": req.body.answer_name,
-					            "statement_type": "1",
+					        data: {  //you can send only notification or only data(or include both)
+					            "question": req.body.question_name,
+					            "description": req.body.answer_type == "1" ? req.body.answer_name : '',
+					            "statement_type": req.body.answer_type,
 					            "content-available": "1"
 					        }
 					    };

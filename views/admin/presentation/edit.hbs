@@ -24,7 +24,7 @@
                     
                     <form class="form-horizontal" id="frmPresentation" name="frmPresentation" method="POST" action="/admin/events/{{event_id}}/presentations/edit/{{presentation.0.id}}" >
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Question</label>
+                            <label class="col-md-3 control-label">Question/Statement</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" placeholder="Enter question"  name="question_name" id="question_name" value="{{presentation.0.question_name}}" />
                             </div>
@@ -33,8 +33,9 @@
                             <label class="col-md-3 control-label">Answer Type</label>
                             <div class="col-md-9">
                                 <select name="answer_type" id="answer_type" class="form-control">
-                                    <option value="1" {{#if (eq presentation.0.answer_type "1")}} selected="selected" {{/if}}>YES/NO</option>
-                                    <option value="2" {{#if (eq presentation.0.answer_type "2")}} selected="selected" {{/if}}>DESCRIPTION</option>
+                                    <option value="1" {{#if (eq presentation.0.answer_type "1")}} selected="selected" {{/if}}>DESCRIPTION</option>
+                                    <option value="2" {{#if (eq presentation.0.answer_type "2")}} selected="selected" {{/if}}>YES/NO/ I am interested</option>
+                                    <option value="3" {{#if (eq presentation.0.answer_type "3")}} selected="selected" {{/if}}>YES/NO</option>
                                 </select>
                             </div>
                         </div>
@@ -87,13 +88,13 @@
     $(document).ready(function(e){
         var answer_type = "{{presentation.0.answer_type}}";
         if(answer_type == "1") {
-            $("#div_answer_yes_no").show();
-            $("#div_answer_desc").hide();
+            $("#div_answer_yes_no").hide();
+            $("#div_answer_desc").show();
         }
         else {
             $("#div_answer_yes_no").hide();
-            $("#div_answer_desc").show();
-            $("#answer_name").val("{{presentation.0.answer_name}}");
+            $("#div_answer_desc").hide();
+            //$("#answer_name").val("{{presentation.0.answer_name}}");
         }
         
 

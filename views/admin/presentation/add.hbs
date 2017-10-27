@@ -24,7 +24,7 @@
                     
                     <form class="form-horizontal" id="frmPresentation" name="frmPresentation" method="POST" action="/admin/events/{{event_id}}/presentations/add" >
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Question</label>
+                            <label class="col-md-3 control-label">Question/Statement</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" placeholder="Enter question"  name="question_name" id="question_name" />
                             </div>
@@ -33,8 +33,10 @@
                             <label class="col-md-3 control-label">Answer Type</label>
                             <div class="col-md-9">
                                 <select name="answer_type" id="answer_type" class="form-control">
-                                    <option value="1">YES/NO</option>
-                                    <option value="2">STATEMENT</option>
+                                    <option value="1">STATEMENT</option>
+                                    <option value="2">YES/NO/ I am interested</option>
+                                    <option value="3">YES/NO</option>
+                                    
                                 </select>
                             </div>
                         </div>
@@ -82,17 +84,21 @@
 <script type="text/javascript">
     $(document).ready(function(e){
 
-        $("#div_answer_yes_no").show();
-        $("#div_answer_desc").hide();
+        $("#div_answer_yes_no").hide();
+        $("#div_answer_desc").show();
 
         $("#answer_type").change(function(e){
             if($(this).val() == "1") {
-                $("#div_answer_yes_no").show();
-                $("#div_answer_desc").hide();
+                $("#div_answer_yes_no").hide();
+                $("#div_answer_desc").show();
+                //$("#div_answer_yes_no").show();
+                //$("#div_answer_desc").hide();
             }
             else {
                 $("#div_answer_yes_no").hide();
-                $("#div_answer_desc").show();
+                $("#div_answer_desc").hide();
+                //$("#div_answer_yes_no").hide();
+                //$("#div_answer_desc").show();
             }
         });
 
