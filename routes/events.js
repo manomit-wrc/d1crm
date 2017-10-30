@@ -154,7 +154,7 @@ module.exports = function(app, mongoose) {
 			event_id: req.params['event_id'],
 			question_name: req.body.question_name,
 			answer_type: req.body.answer_type,
-			answer_name: req.body.answer_type == "1" ? req.body.answer_name : '',
+			answer_name: '',
 			status: '1'
 		});
 
@@ -166,7 +166,7 @@ module.exports = function(app, mongoose) {
 		  }
 			if(prst) {
 
-             Client.find({}, function(err, clients) {
+             /*Client.find({}, function(err, clients) {
 
                for(var i=0;i<clients.length;i++)
 	            {
@@ -198,7 +198,8 @@ module.exports = function(app, mongoose) {
 
 				req.flash('message', 'Presentation added successfully');
 
-			});
+			});*/
+             req.flash('message', 'Presentation added successfully');
 
 			}
 			res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
@@ -240,7 +241,7 @@ module.exports = function(app, mongoose) {
 			        event_id: req.params['event_id'],
 					question_name: req.body.question_name,
 					answer_type: req.body.answer_type,
-					answer_name: req.body.answer_type == "1" ? req.body.answer_name : '',
+					answer_name: '',
 					status: '1'
 				}
 			}, function(err, presentation){
@@ -254,69 +255,6 @@ module.exports = function(app, mongoose) {
 		});
 
 	  }
-	  else if(pushStatus=="push")
-	  {
-          
-          Presentation.findOneAndUpdate(
-			{_id: req.params['id'], event_id: req.params['event_id']}, 
-			{
-				$set:
-				{
-			        event_id: req.params['event_id'],
-					question_name: req.body.question_name,
-					answer_type: req.body.answer_type,
-					answer_name: req.body.answer_type == "1" ? req.body.answer_name : '',
-					status: '1'
-				}
-			}, function(err, presentation){
-				if(err) {
-					req.flash('message', 'Please try again');
-				}
-			if(presentation) {
-
-              Client.find({}, function(err, clients) {
-
-               for(var i=0;i<clients.length;i++)
-	            {
-	            	
-	            	  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-					        to:clients[i].device_id, 
-					        collapse_key: 'green',
-					        
-					        notification: {
-					            title: 'D1 EVENT'
-					        },
-					        
-					        data: {  //you can send only notification or only data(or include both)
-					            "question": req.body.question_name,
-					            "description": req.body.answer_type == "1" ? req.body.answer_name : '',
-					            "statement_type": req.body.answer_type,
-					            "content-available": "1"
-					        }
-					    };
-
-					     fcm.send(message, function(err, response){
-					        if (err) {
-					            console.log(err);
-					        } else {
-					            console.log("Successfully sent with response: ", response);
-					        }
-					    });
-	              }
-
-				   req.flash('message', 'Presentation added successfully');
-
-			      });
-
-                  req.flash('message', 'Presentation updated successfully');
-                  
-				}
-        		res.redirect('/admin/events/'+req.params['event_id']+'/presentations');
-		   });
-
-
-	  }
-
 
 	});
 
@@ -327,4 +265,22 @@ module.exports = function(app, mongoose) {
 		});
 		
 	});
+
+	app.get('/admin/live', function(req, res) {
+		Event.find({}, function(err, events){
+			var msg = req.flash('message')[0];
+			res.render('admin/live/index',{layout:'dashboard', events: events, message: msg});
+		});
+	});
+
+	app.get('/admin/live/:event_id', function(req, res) {
+
+		Presentation.find(
+			{event_id: req.params['event_id']}, 
+			function(err, presentation){
+				Event.find({}, function(err, events){
+					res.render('admin/live/index',{layout:'dashboard', presentation: presentation, event_id: req.params['event_id'], events: events});
+				});
+		});
+	})
 };

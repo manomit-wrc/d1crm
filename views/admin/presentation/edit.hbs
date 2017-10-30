@@ -40,15 +40,15 @@
                             </div>
                         </div>
                         
-                        <div class="form-group" id="div_answer_desc">
+                        {{!-- <div class="form-group" id="div_answer_desc">
                             <label class="col-md-3 control-label">Answer</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" placeholder="Enter answer name" rows="5" name="answer_name" id="answer_name"></textarea>
                             </div>
-                        </div>
+                        </div> --}}
                         
                         
-                        <div class="form-group" id="div_answer_yes_no">
+                        {{!-- <div class="form-group" id="div_answer_yes_no">
                             <label class="col-md-3 control-label">Answer</label>
                             <div class="col-md-9">
                                 <label class="radio-inline">
@@ -60,14 +60,14 @@
                                     NO
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         
                         
                         <div class="form-group">
                             <label class="col-md-3 control-label"></label>
                             <div class="col-md-9">
                                 <button type="submit" class="btn btn-sm btn-success" name="update" value="updt">Update</button>
-                                <button type="submit" class="btn btn-sm btn-success" name="push" value="push">Update and Push</button>
+                                {{!-- <button type="submit" class="btn btn-sm btn-success" name="push" value="push">Update and Push</button> --}}
                             </div>
                         </div>
                     </form>
@@ -87,7 +87,7 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function(e){
-        var answer_type = "{{presentation.0.answer_type}}";
+        /*var answer_type = "{{presentation.0.answer_type}}";
         if(answer_type == "1") {
             $("#div_answer_yes_no").hide();
             $("#div_answer_desc").show();
@@ -115,7 +115,7 @@
                 //$("#div_answer_yes_no").hide();
                 //$("#div_answer_desc").show();
             }
-        });
+        });*/
 
         $("#success-alert").hide();
         $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
@@ -129,15 +129,6 @@
                 },
                 answer_type: {
                     required: true
-                },
-                answer_name: {
-                    required: true
-                },
-                event_address: {
-                    required: true
-                },
-                event_image: {
-                    extension: 'jpg|png'
                 }
             },
             messages: {
@@ -146,15 +137,6 @@
                 },
                 answer_type: {
                     required: "Please select answer type"
-                },
-                answer_name: {
-                    required: "Please enter answer"
-                },
-                event_address: {
-                    required: "Please enter event address"
-                },
-                event_image: {
-                    extension: 'File type must be jpg or png'
                 }
             },
             submitHandler:function(form) {
