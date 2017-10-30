@@ -225,9 +225,10 @@ module.exports = function(app) {
 		
         var updateStatus=req.body.update;
         var pushStatus=req.body.push;
+
         if(updateStatus=="updt")
         {
-		Presentation.findOneAndUpdate(
+		 Presentation.findOneAndUpdate(
 			{_id: req.params['id'], event_id: req.params['event_id']}, 
 			{
 				$set:
