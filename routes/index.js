@@ -200,8 +200,8 @@ module.exports = function(app, passport) {
 	    			res.json({success: false, msg: "Client not found"});
 	    		}
 	    		else {
-    				if (fs.existsSync("public/profile/"+client.image) && client.image != "") {
-						imageName = "http://" + hostname + "/profile/"+client.image;
+    				if (client.image != "") {
+						imageName = client.image;
 			        
 			        }
 				    else {
@@ -259,6 +259,29 @@ module.exports = function(app, passport) {
 	        		
 			});
 	    }
+	});
+
+	app.post('/client/profile/image', passport.authenticate('jwt', { session: false }), function(req, res) {
+		var token = getToken(req.headers);
+		if(token) {
+			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
+			Client.findOneAndUpdate(
+				{ _id: decoded._id}, 
+				{
+					$set:
+					{
+					   image: req.body.image
+					}
+				}, function(err, client){
+					if(err) {
+						res.json({success: false, msg: "Please try again"});
+					}
+					if(client) {
+						res.json({success: true, msg: "Profile image updated successfully"});
+					}
+	        		
+			});
+		}
 	});
 
 	app.post('/client/change-password', passport.authenticate('jwt', { session: false}), function(req, res) {
