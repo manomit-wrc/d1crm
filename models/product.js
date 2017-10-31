@@ -8,6 +8,7 @@ var productSchema = new Schema({
 	description: {type: String, required: 'Please enter product description'},
 	quantity: {type: String, required: 'Please enter product quantity'},
 	price: {type: String, required: 'Please enter product price'},
+	symbol: {type: String, default: ''},
 	image: {type: String, default: ''},
 	status: {type: String, default: '1'}
 });

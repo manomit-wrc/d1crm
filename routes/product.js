@@ -41,6 +41,10 @@ module.exports = function(app) {
 	});
 
 	app.get('/admin/product/add', function(req, res) {
+		/*for (var i in currency) {
+		    if (!currency.hasOwnProperty(i)) continue;
+		    console.log(currency[i]);
+		}*/
 		res.render('admin/product/add',{layout:'dashboard'});
 	});
 
@@ -52,6 +56,7 @@ module.exports = function(app) {
 			description: req.body.description,
 			quantity: req.body.quantity,
 			price: req.body.price,
+			symbol: req.body.symbol,
 			image: fileName 
 		});
 
@@ -94,6 +99,7 @@ module.exports = function(app) {
 					description: req.body.description,
 					quantity: req.body.quantity,
 					price: req.body.price,
+					symbol: req.body.symbol,
 					image: fileName
 				}
 			}, function(err, product){

@@ -56,6 +56,16 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-3 control-label">Currency</label>
+                            <div class="col-md-9">
+                                <select name="symbol" id="symbol" class="form-control">
+                                <option value="">Select Any</option>
+                                <option value="USD">&#36;</option>
+                                <option value="GBP">&#163;</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-3 control-label">Image</label>
                             <div class="col-md-9">
                                 <input type="file" class="form-control"  name="image" id="image" class="image" />
@@ -108,6 +118,9 @@
                 price: {
                     required: true
                 },
+                symbol: {
+                    required: true
+                },
                 image: {
                     extension: 'jpg|png'
                 }
@@ -127,6 +140,9 @@
                 },
                 price: {
                     required: "Please enter product price"
+                },
+                symbol: {
+                    required: "Please select currency symbol"
                 },
                 image: {
                     extension: 'Image type must be jpg or png'
