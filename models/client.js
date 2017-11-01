@@ -9,12 +9,12 @@ var clientSchema = new Schema({
 	password: {type:String, required: 'Please enter password'},
 	original_password: {type: String, default: ''},
 	mobile_no: {type:String, required: 'Please enter mobile no'},
-	address: {type:String, default: ''},
-	country_name: {type:String, default: ''},
-	state_name: {type:String, default: ''},
-	city_name: {type:String, default: ''},
-	pincode: {type:String, default: ''},
-	image: {type:String, default:''},
+	address: {type:String, required: 'Please enter address'},
+	country_name: {type:String, required: 'Please enter country name'},
+	state_name: {type:String, required: 'Please enter state name'},
+	city_name: {type:String, required: 'Please enter city name'},
+	pincode: {type:String, required: 'Please enter pincode'},
+	image: {type:String, default: ''},
 	device_id: {type:String, default:''},
 	platform: {type:String, required: 'Please provide platform'}
 });

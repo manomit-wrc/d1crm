@@ -119,6 +119,11 @@ module.exports = function(app, passport) {
 		   password: bCrypt.hashSync(req.body.password),
 		   original_password: req.body.password,
 		   mobile_no: req.body.mobile_no,
+		   address: req.body.address,
+		   city_name: req.body.city_name,
+		   state_name: req.body.state_name,
+		   country_name: req.body.country_name,
+		   pincode: req.body.pincode,
 		   platform: req.body.platform
   		});
 
@@ -140,7 +145,7 @@ module.exports = function(app, passport) {
         }
 
         
-    	Client.findOne({ 'email' :  req.body.email }, 
+    	Client.findOne({ 'email' :  req.body.email },  { image: 0 }, 
               function(err, client) {
                 // In case of any error, return using the done method
                 if (err)
@@ -150,7 +155,9 @@ module.exports = function(app, passport) {
                   res.json({success: false, msg: "Username or password didn't matched"});                
                 }
                 else {
+
                 	if(bCrypt.compareSync(req.body.password, client.password)) {
+
                 		var token = jwt.encode(client, "W$q4=25*8%v-}UW");
 
 		  				res.json({success: true, token: 'Bearer ' + token});
@@ -194,7 +201,7 @@ module.exports = function(app, passport) {
 		var hostname = req.headers.host;
 		if (token) {
 	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
-	    	Client.findOne({ 'email': decoded.email} , { original_password: 0, password: 0 } , function(err, client){
+	    	Client.findOne({ _id: decoded._id} , { original_password: 0, password: 0 } , function(err, client){
 
 	    		if(err) {
 	    			res.json({success: false, msg: "Client not found"});
@@ -235,16 +242,20 @@ module.exports = function(app, passport) {
 		var token = getToken(req.headers);
 		if (token) {
 	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
-	    	for (var i = 0; i < Object.keys(req.body).length; i++) {
-	    		var key = req.body[Object.keys(req.body)[i]];
-	    		var value = Object.keys(req.body)[i];
-
+	    	    console.log(req.body);
 	    		Client.findOneAndUpdate(
 				{ _id: decoded._id}, 
 				{
 					$set:
 					{
-					   key: value
+					   first_name: (req.body.first_name !="" && req.body.first_name != null) ? req.body.first_name : decoded.first_name,	
+					   last_name: (req.body.last_name !="" && req.body.last_name != null) ? req.body.last_name : decoded.last_name,	
+					   mobile_no: (req.body.mobile_no !="" && req.body.mobile_no != null) ? req.body.mobile_no : decoded.mobile_no,		
+					   address: (req.body.address !="" && req.body.address != null) ? req.body.address : decoded.address,	
+					   city_name: (req.body.city_name !="" && req.body.city_name != null) ? req.body.city_name : decoded.city_name,
+					   state_name: (req.body.state_name !="" && req.body.state_name != null) ? req.body.state_name : decoded.state_name,
+					   country_name: (req.body.country_name !="" && req.body.country_name != null) ? req.body.country_name : decoded.country_name,
+					   pincode: (req.body.pincode !="" && req.body.pincode != null) ? req.body.pincode : decoded.pincode 
 					}
 				}, function(err, client){
 					if(err) {
@@ -255,7 +266,7 @@ module.exports = function(app, passport) {
 					}
 	        		
 			});
-	    	}
+	    	
 
 	    }
 	});

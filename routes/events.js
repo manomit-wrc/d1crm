@@ -284,9 +284,10 @@ module.exports = function(app, mongoose) {
 				});
 		});
 	})
-
+	var presenationObj = {};
 	app.post('/admin/live/send_presentation', function(req, res) {
 		Presentation.find({_id:req.body.presentation_id}, function(err, presentation) {
+			presenationObj = presentation;
 			if(presentation) {
 				Client.find({}, function(err, clients) {
 
@@ -302,12 +303,15 @@ module.exports = function(app, mongoose) {
 						        },
 						        
 						        data: {  //you can send only notification or only data(or include both)
-						            "question": presentation.question_name,
-						            "description": presentation.answer_type == "1" ? text_message : '',
-						            "statement_type": presentation.answer_type,
+						            "question": presentation[0].question_name,
+						            "description": presentation[0].answer_type == "1" ? text_message : '',
+						            "statement_type": presentation[0].answer_type,
 						            "content-available": "1"
 						        }
 						    };
+
+						    
+						    
 
 						     fcm.send(message, function(err, response){
 						        if (err) {
