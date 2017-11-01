@@ -50,22 +50,30 @@
 
 
                                 <td>
+                              
+                                <div>
+                                <font id="symbol/{{inc @index}}">{{this.symbol}}
+                                </font>&nbsp;
 
-                                <font id="symbol/{{inc @index}}">{{this.symbol}}</font>&nbsp;<font id="price/{{inc @index}}">{{this.price}}</font>
-                                 
-                                <div style="display:inline-block">
-                                 
-                                 <font id="swhsymbol/{{inc @index}}" style="display:none">
-                                 <select  class="" id="swhsymboldata/{{inc @index}}" style="width:40px">
-                                  <option value="&#36;" {{#if (eq this.symbom "&#36;")}} selected {{/if}}>&#36;</option>
-                                  <option value="&#163" {{#if (eq this.symbom "&#163;")}} selected {{/if}}>&#163;</option>
-                                </select>
-                                  </font>
-                                  <span id="swhprice/{{inc @index}}" style="display:none">
-                                 <input type="text" value="{{this.price}}" id="swhpricedata/{{inc @index}}" style="width:50px">
-                                 </span>
-
+                                <font id="price/{{inc @index}}">{{this.price}}</font>
                                  </div>
+                                
+                                 <div  id="swhsymbol/{{inc @index}}" style="display:none">
+                                 <div style="display:flex">
+                                 <font >
+                                     <select  class="" id="swhsymboldata/{{inc @index}}" style="width:40px;height:25px">
+                                      <option value="&#36;" {{#if (eq this.symbom "&#36;")}} selected {{/if}}>&#36;</option>
+                                      <option value="&#163" {{#if (eq this.symbom "&#163;")}} selected {{/if}}>&#163;</option>
+                                    </select>
+                                  </font>&nbsp;
+
+                                  <font id="swhprice/{{inc @index}}" >
+                                    <input type="text" value="{{this.price}}" id="swhpricedata/{{inc @index}}" style="width:50px">
+                                 </font>
+                                 </div>
+                                </div>
+                                 
+
                                 </td>
                                 
                                 <td>
@@ -102,7 +110,8 @@
 </div>
 
 <script type="text/javascript">
-   function edit(v)
+  
+function edit(v)
    {
      //alert(v);
      var tot=document.getElementById("total").value;
@@ -137,15 +146,12 @@
    }
    function update(v,id)
    {
-    //alert(id);
+    
      var code=document.getElementById("swhCode/"+v).value;
      var name=document.getElementById("swhName/"+v).value;
      var symbol=document.getElementById("swhsymboldata/"+v).value;
      var price=document.getElementById("swhpricedata/"+v).value;
-     //alert(code);
-     //alert(name);
-     //alert(symbol);
-     //alert(price);
+   
 
         $.ajax({
               url: '/admin/product/inlineUpdate',
@@ -188,5 +194,7 @@
             });
 
    }
+
+
 </script>
 

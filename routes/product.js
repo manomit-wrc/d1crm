@@ -32,7 +32,7 @@ module.exports = function(app) {
 
     var upload = multer({ storage: storage, limits: {fileSize:3000000, fileFilter:restrictImgType} });
 
-	app.get('/admin/product', function(req, res) {
+	  app.get('/admin/product', function(req, res) {
 		Product.find({}, function(err, product){
          
          Product.count({}, function(err,count){
