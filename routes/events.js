@@ -284,4 +284,44 @@ module.exports = function(app, mongoose) {
 				});
 		});
 	})
+
+	app.post('/admin/live/send_presentation', function(req, res) {
+		Presentation.find({_id:req.body.presentation_id}, function(err, presentation) {
+			if(presentation) {
+				Client.find({}, function(err, clients) {
+
+	               for(var i=0;i<clients.length;i++)
+		            {
+		            	  var text_message = 'CONGRATULATIONS!, You now have Digital1 for FREE for 30 days. Your Username is your email address, and your temporary password is   ABC        Please change your password on logging in'
+		            	  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+						        to:clients[i].device_id, 
+						        collapse_key: 'green',
+						        
+						        notification: {
+						            title: 'Digital1 Event Platform'
+						        },
+						        
+						        data: {  //you can send only notification or only data(or include both)
+						            "question": presentation.question_name,
+						            "description": presentation.answer_type == "1" ? text_message : '',
+						            "statement_type": presentation.answer_type,
+						            "content-available": "1"
+						        }
+						    };
+
+						     fcm.send(message, function(err, response){
+						        if (err) {
+						            console.log(err);
+						        } else {
+						            console.log("Successfully sent with response: ", response);
+						        }
+						    });
+		            }
+
+					res.json({success: 1, msg: 'Push notification send successfully'});
+
+				});
+			}
+		});
+	});
 };

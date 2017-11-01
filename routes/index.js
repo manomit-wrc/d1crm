@@ -235,19 +235,16 @@ module.exports = function(app, passport) {
 		var token = getToken(req.headers);
 		if (token) {
 	    	var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
-	    	Client.findOneAndUpdate(
+	    	for (var i = 0; i < Object.keys(req.body).length; i++) {
+	    		var key = req.body[Object.keys(req.body)[i]];
+	    		var value = Object.keys(req.body)[i];
+
+	    		Client.findOneAndUpdate(
 				{ _id: decoded._id}, 
 				{
 					$set:
 					{
-					   first_name: req.body.first_name,
-					   last_name: req.body.last_name,
-					   mobile_no: req.body.mobile_no,
-					   address: req.body.address,
-					   country_name: req.body.country_name,
-					   state_name: req.body.state_name,
-					   city_name: req.body.city_name,
-					   pincode: req.body.pincode
+					   key: value
 					}
 				}, function(err, client){
 					if(err) {
@@ -258,6 +255,8 @@ module.exports = function(app, passport) {
 					}
 	        		
 			});
+	    	}
+
 	    }
 	});
 
@@ -346,6 +345,7 @@ module.exports = function(app, passport) {
 					    	description: products[i].description,
 					    	quantity: products[i].quantity,
 					    	price: products[i].price,
+					    	symbol: products[i].symbol,
 					    	image: imageName
 					    });
 					}
@@ -381,6 +381,7 @@ module.exports = function(app, passport) {
 				    	description: product[0].description,
 				    	quantity: product[0].quantity,
 				    	price: product[0].price,
+				    	symbol: product[0].symbol,
 				    	image: imageName
 				    });
 					res.json({success: true, msg: "Product List", product:productArr});

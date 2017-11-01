@@ -20,15 +20,8 @@
                     <h4 class="panel-title">Presentations</h4>
                 </div>
                 <div class="panel-body">
-                    {{#if message}}
-                        <div class="alert alert-success" id="success-alert">
-                            <button type="button" class="close" data-dismiss="alert">x</button>
-                            <strong>Success! </strong>
-                            {{message}}
-                        </div>
-          
-                    {{/if}}
-                    <div class="col-md-12">
+                   
+                    <div class="col-md-12" id="mainDiv" name="mainDiv">
                         
                         <div class="form-group">
                         <select name="event_id" name="event_id" class="form-control" onchange="loadPresentation(this.value);">
@@ -59,7 +52,8 @@
                                 {{#if (eq this.answer_type "3")}} YES/NO {{/if}}
                                 </td>
                                 <td>
-                                    <a title="Edit" href="javascript:void(0)" class="btn btn-primary btn-sm m-r-5">SEND</a>
+                                    <a title="Edit" href="javascript:void(0)" class="btn btn-primary btn-sm m-r-5 btn-send" data-presentation_id="{{this.id}}">SEND</a>
+                                    
                                     
                                 </td>
                             </tr>
@@ -78,5 +72,33 @@
     function loadPresentation(value) {
         window.location.href = "/admin/live/"+value;
     }
+
+    $(document).on('click', '.btn-send', function(){
+        var presentation_id = $(this).data('presentation_id');
+        $(this).hide();
+        $(this).after('<img src="/admin/images/spinner.gif" class="img-responsive" height="40px" width="40px" />');
+        var flag = 0;
+        var msg = '';
+        $.ajax({
+            type: "POST",
+            url: "/admin/live/send_presentation",
+            data: {presentation_id: presentation_id},
+            async: false,
+            success:function(response) {
+                flag = 1;
+                msg = response.msg;
+            },
+            error:function(xhr) {
+                flag = 1;
+                msg = "Please try again";
+            }
+        });
+
+        if(flag == 1) {
+            $(".img-responsive").remove();
+            $(this).show();
+            $('<div class="alert alert-success" id="success-alert"><button type="button" class="close" data-dismiss="alert">x</button><strong>Success! '+msg+'</strong></div>').insertBefore("#mainDiv");
+        }
+    });
 </script>
 
