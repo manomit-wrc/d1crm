@@ -125,22 +125,16 @@ module.exports = function(app) {
          var code=req.body.code;
          
          Product.findOne(
-
-         //{_id:pid,'code':code,'name':name},
-           {code:code,_id: { $ne: pid }},{name:name,_id: { $ne: pid }},
-           
-          //{ '_id': pid} $and: {'code': code} $and:{'name': name},
+           {code:code,_id: { $ne: pid }},
+         
 			  function(err, product){
 				
-				if(product) {
-					
+			   if(product) {
 					res.json({message:"duplicate"});
-					
-				}
+				 }
 				else
 				{
-
-				 Product.findOneAndUpdate(
+                 Product.findOneAndUpdate(
 					{_id:req.body.pid}, 
 					{
 						$set:
@@ -160,25 +154,25 @@ module.exports = function(app) {
 						if(product) {
 
 		                   Product.find({_id: pid}, function(err, product){
-		                   	//console.log(product);
+		                   	
 		                   	  var upd_name=product[0].name;
 		                   	  var upd_code=product[0].code;
 		                   	  var upd_price=product[0].price;
 		                   	  var upd_symbol=product[0].symbol;
-		                          res.json({name:upd_name,code:upd_code,price:upd_price,symbol:upd_symbol});
-								//res.render('admin/product/edit',{layout:'dashboard', product:product});
+		                      res.json({name:upd_name,code:upd_code,price:upd_price,symbol:upd_symbol});
+								
 							});
 
 
-							//req.flash('message', 'Product updated successfully');
+							
 						   }
-		        		   //res.redirect('/admin/product');
+		        		  
 				      });
 		
 
                   
 				}
-        		//res.redirect('/admin/product');
+        		
 		});
 	
     	 
