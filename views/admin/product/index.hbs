@@ -163,14 +163,16 @@ function edit(v)
               
                if(response.message=="duplicate")
                {
-                   alert("Name or Code Be Duplicate");
+                   alert("Code Be Duplicate");
                }
                else
                {
-               var upd_name=response.name; 
-               var upd_code=response.code;
-               var upd_price=response.price;
-               var upd_symbol=response.symbol;
+               
+
+                   var upd_name=response.name; 
+                   var upd_code=response.code;
+                   var upd_price=response.price;
+                   var upd_symbol=response.symbol;
                
                      document.getElementById("code/"+v).style.display='block';
                      document.getElementById("code/"+v).innerHTML=upd_code;
@@ -180,7 +182,7 @@ function edit(v)
                      document.getElementById("symbol/"+v).innerHTML=upd_symbol;
                      document.getElementById("price/"+v).style.display='block';
                      document.getElementById("price/"+v).innerHTML=upd_price;
-                     document.getElementById("inlineedit/"+v).style.display='block';
+                    document.getElementById("inlineedit/"+v).style.display='block';
 
                      document.getElementById("swhCode/"+v).style.display='none';
                      document.getElementById("swhName/"+v).style.display='none';
