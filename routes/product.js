@@ -117,13 +117,24 @@ module.exports = function(app) {
 		});
 	});
 
+    
+    app.post('/admin/product/inlineCheck/', function(req, res) {
+        
+        var pid=req.body.pid;
+           Product.find({_id: pid}, function(err, product){
+		                   	 
+		        var upd_symbol=product[0].symbol;
+		         res.json({symbol:upd_symbol});
+								
+		      });
+
+    });
 
     app.post('/admin/product/inlineUpdate/', function(req, res) {
         
          var pid=req.body.pid;
          var name=req.body.name;
          var code=req.body.code;
-         
          Product.findOne(
            {code:code,_id: { $ne: pid }},
          
@@ -159,13 +170,12 @@ module.exports = function(app) {
 		                   	  var upd_code=product[0].code;
 		                   	  var upd_price=product[0].price;
 		                   	  var upd_symbol=product[0].symbol;
+		                   	  //console.log(upd_symbol);
 		                      res.json({name:upd_name,code:upd_code,price:upd_price,symbol:upd_symbol});
 								
 							});
 
-
-							
-						   }
+                        }
 		        		  
 				      });
 		
