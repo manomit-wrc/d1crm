@@ -19,6 +19,8 @@ module.exports = function(app, passport) {
 
 	var fs = require('fs');
 
+	var base64Img = require('base64-img');
+
 	var FCM = require('fcm-node');
     var serverKey = 'AAAAUdnMgPw:APA91bEW2wNomqp3O6XdAY1GEb8M3LSFlVaI5wy5GpvhOs_jo7t1A1UVP0LD_qX3uRu-bjj0Aghcd8v96MxCfxLi3MlVhBrvfpDSGj9QNpPar8EtLrxnN52WEcscujnJ5BgP1_adeTs-'; //put your server key here 
     var fcm = new FCM(serverKey);
@@ -34,7 +36,7 @@ module.exports = function(app, passport) {
 
 	app.get('/test_noti', function(req, res) {
 		var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-        to: 'm3Fco2ZL-q4:APA91bGxSqsTZH6f7hEsPqmjWYrHqG9ameeXJevfkx4YCOmsDsyqfhB4dbJmjUAhwYsEI09UfnuanviXmKZYMkluV-KTN6rn1FA6AkeAJ3CW_xuLFLQQR33EzqlYzLNT-XG1Z2lpDcAv', 
+        to: 'mhVARvSPfgQ:APA91bH09qNTaLhQvWAIib7kMPzCM8wo8UH5t7B0X4kknsG7MLYRArlI4f7jOgTN0_3Rbsv-TcAsDARglTGOSPKY3EDSdZR3DEkymQjkcd7tL78wx_U-fZJpprovEnhc9ypiiVzk9tpK', 
         collapse_key: 'green',
         
         notification: {
@@ -208,7 +210,7 @@ module.exports = function(app, passport) {
 	    		}
 	    		else {
     				if (client.image != "") {
-						imageName = client.image;
+						imageName = "http://" + hostname + "/" + client.image;
 			        
 			        }
 				    else {
@@ -275,22 +277,26 @@ module.exports = function(app, passport) {
 		var token = getToken(req.headers);
 		if(token) {
 			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
-			Client.findOneAndUpdate(
-				{ _id: decoded._id}, 
-				{
-					$set:
+			var random_otp = Math.floor(100000 + Math.random() * 900000);
+			base64Img.img(req.body.image, 'public/profile', random_otp, function(err, filepath) {
+					Client.findOneAndUpdate(
+					{ _id: decoded._id}, 
 					{
-					   image: req.body.image
-					}
-				}, function(err, client){
-					if(err) {
-						res.json({success: false, msg: "Please try again"});
-					}
-					if(client) {
-						res.json({success: true, msg: "Profile image updated successfully"});
-					}
-	        		
+						$set:
+						{
+						   image: filepath.replace('public/', '')
+						}
+					}, function(err, client){
+						if(err) {
+							res.json({success: false, msg: "Please try again"});
+						}
+						if(client) {
+							res.json({success: true, msg: "Profile image updated successfully"});
+						}
+		        		
+				});
 			});
+			
 		}
 	});
 

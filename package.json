@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "base64-img": "^1.0.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.1",
     "connect-flash": "^0.1.1",

@@ -127,7 +127,8 @@ module.exports = function(app) {
          Product.findOne(
 
          //{_id:pid,'code':code,'name':name},
-           {_id:pid,'code':code},{_id:pid,'name':name},
+           {code:code,_id: { $ne: pid }},{name:name,_id: { $ne: pid }},
+           
           //{ '_id': pid} $and: {'code': code} $and:{'name': name},
 			  function(err, product){
 				

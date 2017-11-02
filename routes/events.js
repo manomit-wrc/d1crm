@@ -299,7 +299,8 @@ module.exports = function(app, mongoose) {
 						        collapse_key: 'green',
 						        
 						        notification: {
-						            title: 'Digital1 Event Platform'
+						            title: 'Digital1 Event Platform',
+						            body: 'Digital1 Event Platform'
 						        },
 						        
 						        data: {  //you can send only notification or only data(or include both)
