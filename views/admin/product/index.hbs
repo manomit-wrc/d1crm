@@ -60,10 +60,10 @@
                                 
                                  <div  id="swhsymbol/{{inc @index}}" style="display:none">
                                  <div style="display:flex">
-                                 <font >
+                                  <font>
                                      <select  class="" id="swhsymboldata/{{inc @index}}" style="width:40px;height:25px">
-                                      <option value="&#36;" {{#if (eq this.symbom "&#36;")}} selected {{/if}}>&#36;</option>
-                                      <option value="&#163" {{#if (eq this.symbom "&#163;")}} selected {{/if}}>&#163;</option>
+                                      <option value="&#36;" {{#if (eq this.symbol "$")}} selected {{/if}}>&#36;</option>
+                                      <option value="&#163" {{#if (eq this.symbol "£")}} selected {{/if}}>&#163;</option>
                                     </select>
                                   </font>&nbsp;
 
@@ -83,7 +83,7 @@
                                     
                                 <div style="display:inline-block">
                                     <font id="inlineedit/{{inc @index}}">
-                                    <button type="submit" class="btn btn-sm btn-success" onclick="edit({{inc @index}});">Inline Edit</button>
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="edit('{{inc @index}}','{{this._id}}');">Inline Edit</button>
                                     </font>
                                     
                                     <span id="update/{{inc @index}}" style="display:none">
@@ -111,9 +111,9 @@
 
 <script type="text/javascript">
   
-function edit(v)
+function edit(v,id)
    {
-     //alert(v);
+     
      var tot=document.getElementById("total").value;
      //alert(tot);
      for(var i=1;i<=tot;i++)
@@ -142,6 +142,28 @@ function edit(v)
      document.getElementById("swhsymbol/"+v).style.display='block';
      document.getElementById("swhprice/"+v).style.display='block';
      document.getElementById("update/"+v).style.display='block';
+
+     //var pre_sym=document.getElementById("symbol/"+v).innerHTML;
+        //alert(pre_sym);
+        
+       // $.ajax({
+             // url: '/admin/product/inlineCheck',
+              //type: "post",
+              //dataType: "json",
+              //data: {pid:id},
+              ////contentType: 'application/json',
+               //success: function(response){
+                 //var upd_symbol=response.symbol;
+                 ////alert(upd_symbol);
+                 //document.getElementById("swhsymbol/"+v).value=upd_symbol;
+         // }
+        //});
+
+
+     
+
+     
+
     
    }
    function update(v,id)
@@ -151,7 +173,8 @@ function edit(v)
      var name=document.getElementById("swhName/"+v).value;
      var symbol=document.getElementById("swhsymboldata/"+v).value;
      var price=document.getElementById("swhpricedata/"+v).value;
-   
+     var pre_code=document.getElementById("code/"+v).innerHTML;
+    
 
         $.ajax({
               url: '/admin/product/inlineUpdate',
@@ -164,11 +187,10 @@ function edit(v)
                if(response.message=="duplicate")
                {
                    alert("Code Be Duplicate");
+                   document.getElementById("swhCode/"+v).value=pre_code;
                }
                else
                {
-               
-
                    var upd_name=response.name; 
                    var upd_code=response.code;
                    var upd_price=response.price;
