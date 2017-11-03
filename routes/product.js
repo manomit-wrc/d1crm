@@ -118,7 +118,7 @@ module.exports = function(app) {
 	});
 
     
-    app.post('/admin/product/inlineCheck/', function(req, res) {
+    /*app.post('/admin/product/inlineCheck/', function(req, res) {
         
         var pid=req.body.pid;
            Product.find({_id: pid}, function(err, product){
@@ -129,7 +129,7 @@ module.exports = function(app) {
 		      });
 
     });
-
+*/
     app.post('/admin/product/inlineUpdate/', function(req, res) {
         
          var pid=req.body.pid;

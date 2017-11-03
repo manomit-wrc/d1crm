@@ -62,8 +62,8 @@
                                  <div style="display:flex">
                                   <font>
                                      <select  class="" id="swhsymboldata/{{inc @index}}" style="width:40px;height:25px">
-                                      <option value="&#36;" {{#if (eq this.symbom "&#36;")}} selected {{/if}}>&#36;</option>
-                                      <option value="&#163" {{#if (eq this.symbom "&#163;")}} selected {{/if}}>&#163;</option>
+                                      <option value="&#36;" {{#if (eq this.symbol "$")}} selected {{/if}}>&#36;</option>
+                                      <option value="&#163" {{#if (eq this.symbol "£")}} selected {{/if}}>&#163;</option>
                                     </select>
                                   </font>&nbsp;
 
@@ -146,41 +146,23 @@ function edit(v,id)
      //var pre_sym=document.getElementById("symbol/"+v).innerHTML;
         //alert(pre_sym);
         
-        $.ajax({
-              url: '/admin/product/inlineCheck',
-              type: "post",
-              dataType: "json",
-              data: {pid:id},
-              //contentType: 'application/json',
-               success: function(response){
-                 var upd_symbol=response.symbol;
-                 //alert(upd_symbol);
-                 document.getElementById("swhsymbol/"+v).value=upd_symbol;
-          }
-        });
+       // $.ajax({
+             // url: '/admin/product/inlineCheck',
+              //type: "post",
+              //dataType: "json",
+              //data: {pid:id},
+              ////contentType: 'application/json',
+               //success: function(response){
+                 //var upd_symbol=response.symbol;
+                 ////alert(upd_symbol);
+                 //document.getElementById("swhsymbol/"+v).value=upd_symbol;
+         // }
+        //});
 
 
      
 
-     //var ScRe = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BD\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6]/;
-
-     //alert(ScRe.test("£"));
-
-     //document.getElementById("swhsymbol/"+v).value='&#163';
-
-     //if(ScRe.test("$")==true)
-     //{
-       //alert('1');
-       //pre_sym='&#36';
-       //document.getElementById("swhsymbol/"+v).value=pre_sym;
      
-     //}
-     //else if(ScRe.test("£")==true)
-     //{
-       //alert('2');
-       //pre_sym='&#163';
-       //document.getElementById("swhsymbol/"+v).value=pre_sym;
-     //}
 
     
    }
