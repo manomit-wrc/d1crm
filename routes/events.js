@@ -3,6 +3,10 @@ module.exports = function(app, mongoose) {
 	var Presentation = require('../models/presentations').Presentation;
 	var Client = require('../models/client').Client;
 
+	var Device = require('../models/device').Device;
+
+	var Notification = require('../models/notification').Notification;
+
 	var FCM = require('fcm-node');
     var serverKey = 'AAAAUdnMgPw:APA91bEW2wNomqp3O6XdAY1GEb8M3LSFlVaI5wy5GpvhOs_jo7t1A1UVP0LD_qX3uRu-bjj0Aghcd8v96MxCfxLi3MlVhBrvfpDSGj9QNpPar8EtLrxnN52WEcscujnJ5BgP1_adeTs-'; //put your server key here 
     var fcm = new FCM(serverKey);
@@ -283,50 +287,61 @@ module.exports = function(app, mongoose) {
 					res.render('admin/live/index',{layout:'dashboard', presentation: presentation, event_id: req.params['event_id'], events: events});
 				});
 		});
-	})
+	});
 	var presenationObj = {};
 	app.post('/admin/live/send_presentation', function(req, res) {
 		Presentation.find({_id:req.body.presentation_id}, function(err, presentation) {
 			presenationObj = presentation;
 			if(presentation) {
-				Client.find({}, function(err, clients) {
+				Device.find({}, function(err, devices) {
+					for(var i=0;i<devices.length;i++) {
+						     notificationObj = new Notification({
+						     	device_id: devices[i].device_id,
+						     	presentation_id: presentation[0]._id,
+						     	question: presentation[0].question_name,
+						     	statement_type: presentation[0].answer_type,
+						     	status: ''
+						     });
 
-	               for(var i=0;i<clients.length;i++)
-		            {
-		            	  var text_message = 'CONGRATULATIONS!, You now have Digital1 for FREE for 30 days. Your Username is your email address, and your temporary password is   ABC        Please change your password on logging in'
-		            	  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-						        to:clients[i].device_id, 
-						        collapse_key: 'green',
-						        
-						        notification: {
-						            title: 'Digital1 Event Platform',
-						            body: 'Digital1 Event Platform'
-						        },
-						        
-						        data: {  //you can send only notification or only data(or include both)
-						            "question": presentation[0].question_name,
-						            "description": presentation[0].answer_type == "1" ? text_message : '',
-						            "statement_type": presentation[0].answer_type,
-						            "content-available": "1"
-						        }
-						    };
+						     var new_device_id = devices[i].device_id;
 
-						    
-						    
+						     notificationObj.save(function(err, noti) {
+						     	if(noti) {
+						     		var text_message = 'CONGRATULATIONS!, You now have Digital1 for FREE for 30 days.'
+					            	var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+									        to:new_device_id, 
+									        collapse_key: 'green',
+									        
+									        notification: {
+									            title: 'Digital1 Event Platform',
+									            body: 'Digital1 Event Platform'
+									        },
+									        
+									        data: {  //you can send only notification or only data(or include both)
+									            "question": presentation[0].question_name,
+									            "description": presentation[0].answer_type == "1" ? text_message : '',
+									            "statement_type": presentation[0].answer_type,
+									            "presentation_id": presentation[0]._id,
+									            "notification_id": noti._id,
+									            "content-available": "1"
+									        }
+									    };
+						     		fcm.send(message, function(err, response){
+								        if (err) {
+								            console.log(err);
+								        } else {
+								            console.log("Successfully sent with response: ", response);
+								        }
+						    		});
+						     	}
+						     });
 
-						     fcm.send(message, function(err, response){
-						        if (err) {
-						            console.log(err);
-						        } else {
-						            console.log("Successfully sent with response: ", response);
-						        }
-						    });
-		            }
-
+						     
+					}
 					res.json({success: 1, msg: 'Push notification send successfully'});
-
 				});
 			}
 		});
 	});
+
 };

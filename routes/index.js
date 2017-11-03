@@ -21,6 +21,10 @@ module.exports = function(app, passport) {
 
 	var base64Img = require('base64-img');
 
+	var Device = require('../models/device').Device;
+
+	var Notification = require('../models/notification').Notification;
+
 	var FCM = require('fcm-node');
     var serverKey = 'AAAAUdnMgPw:APA91bEW2wNomqp3O6XdAY1GEb8M3LSFlVaI5wy5GpvhOs_jo7t1A1UVP0LD_qX3uRu-bjj0Aghcd8v96MxCfxLi3MlVhBrvfpDSGj9QNpPar8EtLrxnN52WEcscujnJ5BgP1_adeTs-'; //put your server key here 
     var fcm = new FCM(serverKey);
@@ -210,7 +214,8 @@ module.exports = function(app, passport) {
 	    		}
 	    		else {
     				if (client.image != "") {
-						imageName = "http://" + hostname + "/" + client.image;
+						//imageName = "http://" + hostname + "/" + client.image;
+						imageName = client.image;
 			        
 			        }
 				    else {
@@ -277,8 +282,28 @@ module.exports = function(app, passport) {
 		var token = getToken(req.headers);
 		if(token) {
 			var decoded = jwt.decode(token, "W$q4=25*8%v-}UW");
-			var random_otp = Math.floor(100000 + Math.random() * 900000);
-			base64Img.img(req.body.image, 'public/profile', random_otp, function(err, filepath) {
+			var img = req.body.image.replace(" ", "");
+			console.log(img);
+			Client.findOneAndUpdate(
+				{ _id: decoded._id}, 
+				{
+					$set:
+					{
+					   image: img
+					}
+				}, function(err, client){
+					if(err) {
+						res.json({success: false, msg: "Please try again"});
+					}
+					if(client) {
+						res.json({success: true, msg: "Profile image updated successfully"});
+					}
+	        		
+			});
+			//var random_otp = Math.floor(100000 + Math.random() * 900000);
+			//var img_1 = req.body.image.replace("data:image/jpeg;base64,", "");
+			//var img_2 = req.body.image.replace(' ', '+');
+			/*base64Img.img(img_2, 'public/profile', random_otp, function(err, filepath) {
 					Client.findOneAndUpdate(
 					{ _id: decoded._id}, 
 					{
@@ -295,7 +320,7 @@ module.exports = function(app, passport) {
 						}
 		        		
 				});
-			});
+			});*/
 			
 		}
 	});
@@ -625,6 +650,45 @@ module.exports = function(app, passport) {
 				});
 			}
 		})
+	});
+
+	app.post('/client/device', function(req, res){
+		Device.findOne({ 'device_id': req.body.device_id}, function(err, client) {
+			if(!client) {
+				var deviceObj = new Device({
+					device_id:  req.body.device_id
+				});
+
+				deviceObj.save(function(err, device) {
+					if(device) {
+						res.json({success: true, flag: 1});
+					}
+				});
+			}
+			else {
+				res.json({success: true, flag: 2});
+			}
+		});
+	});
+
+	app.post('/client/notification/status', passport.authenticate('jwt', { session: false }), function(req, res) {
+		Notification.findOneAndUpdate(
+			{ _id: req.body.notification_id},
+			{
+				$set:
+				{
+				   status: req.body.status
+				}
+			}, function(err, noti){
+						if(err) {
+							res.json({success: false, msg: "Please try again"});
+						}
+						if(noti) {
+							res.json({success: true, msg: "Notification status updated"});
+						}
+		        		
+				}
+		);
 	});
 
     getToken = function (headers) {
