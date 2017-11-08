@@ -33,6 +33,10 @@ module.exports = function(app, passport) {
 
     var ForgotPassword = require('../models/forgot_password').ForgotPassword;
 
+    var MessagingResponse = require('twilio').twiml.MessagingResponse;
+
+    var clientNumber = require('twilio')("AC5d9552692b97e1fc3159975fe5eba8a6", "3a986cf91d8a436982fb98f72cc75e9e");
+
 	// =====================================
 	// Login PAGE (with login links) ========
 	// =====================================
@@ -40,7 +44,7 @@ module.exports = function(app, passport) {
 
 	app.get('/test_noti', function(req, res) {
 		var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-        to: 'mhVARvSPfgQ:APA91bH09qNTaLhQvWAIib7kMPzCM8wo8UH5t7B0X4kknsG7MLYRArlI4f7jOgTN0_3Rbsv-TcAsDARglTGOSPKY3EDSdZR3DEkymQjkcd7tL78wx_U-fZJpprovEnhc9ypiiVzk9tpK', 
+        to: 'e1nm7FXDpXM:APA91bFY-i1E9ofUaIRSoxY5Cf6SotGEK1fEFzVvexHSwHCaQ2FMzc8ytXI4SXkfuE877r2Uo5pWXs7dAGbClC1zSxhgmUi31hKcgUzm4Kx59t0yM2GTaOCTwfrTDb4vc9AanAa4mch4', 
         collapse_key: 'green',
         
         notification: {
@@ -671,7 +675,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/client/notification/status', passport.authenticate('jwt', { session: false }), function(req, res) {
+	app.post('/client/notification/status', function(req, res) {
 		Notification.findOneAndUpdate(
 			{ _id: req.body.notification_id},
 			{
@@ -689,6 +693,43 @@ module.exports = function(app, passport) {
 		        		
 				}
 		);
+	});
+
+	app.post('/twilio/sms/reply', function(req, res) {
+		  var twiml = new MessagingResponse();
+
+		  twiml.message('The Robots are coming! Head for the hills!');
+
+		  res.writeHead(200, {'Content-Type': 'text/xml'});
+		  res.end(twiml.toString());
+	});
+
+	app.get('/twilio/numbers', function(req, res) {
+		var filterOpts = {
+		    from: '+14139923472',
+		    dateSent: '2017-11-03'
+		};
+
+		clientNumber.messages.list(filterOpts, function(err, data) {
+		    data.forEach(function(message) {
+		        console.log(message);
+		    });
+		});
+	});
+
+	app.get('/twilio/sms/send', function(req, res) {
+		clientNumber.messages
+		  .create({
+		    to: '+447887490584',
+		    from: '+441244470576',
+		    body: "This Friday (10th Nov), please join Lord Sugar and I at the Business Empires Event at the Hilton Hotel - Terminal 5 (Heathrow Airport). \n\n\n For FRIDAY ONLY (£99 +VAT) Tickets go to:    http://www.RockstarFridayOnly.com. \n\n For both days (9th and 10th) at £199 +VAT, go to http://www.BusinessEmpires.info. \n\n For tickets to our VIP dinner go to http://www.RockstarDinner.com. \n\n\n Look forward to see you there, \n\n\n Jonathan Pfahl \n\n ROCKSTAR HUBS INTERNATIONAL \n\n To not receive SMS messages from Rockstar Hubs International (www.rockstarhubs.international) text back the word STOP",
+		  })
+		  .then(function(message) {
+		  	console.log(message.sid);
+		  	
+		  	
+		  });
+
 	});
 
     getToken = function (headers) {
