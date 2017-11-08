@@ -60,8 +60,8 @@
                             <div class="col-md-9">
                                 <select name="symbol" id="symbol" class="form-control">
                                 <option value="">Select Any</option>
-                                <option value="&#36;">&#36;</option>
-                                <option value="&#163;">&#163;</option>
+                                <option value="&#36;" {{#if (eq product.0.symbol "$")}} selected {{/if}}>&#36;</option>
+                                <option value="&#163;" {{#if (eq product.0.symbol "£")}} selected {{/if}}>&#163;</option>
                                 </select>
                             </div>
                         </div>

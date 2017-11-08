@@ -81,7 +81,7 @@
 
                                     <a title="Delete" href="/admin/product/delete/{{this._id}}" onclick="return confirm('Do you really want to delete the current record ?');" class="btn btn-danger btn-sm m-r-5"><i class="fa fa-trash"></i></a>
                                     
-                                <div style="display:inline-block">
+                                   <div style="display:inline-block">
                                     <font id="inlineedit/{{inc @index}}">
                                     <button type="submit" class="btn btn-sm btn-success" onclick="edit('{{inc @index}}','{{this._id}}');">Inline Edit</button>
                                     </font>
@@ -111,14 +111,16 @@
 
 <script type="text/javascript">
   
-function edit(v,id)
+  function edit(v,id)
    {
      
      var tot=document.getElementById("total").value;
      //alert(tot);
+     
      for(var i=1;i<=tot;i++)
      {
          document.getElementById("code/"+i).style.display='block';
+         //$('#code'+i).css("display","block");
          document.getElementById("name/"+i).style.display='block';
          document.getElementById("symbol/"+i).style.display='block';
          document.getElementById("price/"+i).style.display='block';
@@ -131,6 +133,7 @@ function edit(v,id)
          document.getElementById("update/"+i).style.display='none';
 
      }
+     
      document.getElementById("code/"+v).style.display='none';
      document.getElementById("name/"+v).style.display='none';
      document.getElementById("symbol/"+v).style.display='none';
@@ -143,28 +146,6 @@ function edit(v,id)
      document.getElementById("swhprice/"+v).style.display='block';
      document.getElementById("update/"+v).style.display='block';
 
-     //var pre_sym=document.getElementById("symbol/"+v).innerHTML;
-        //alert(pre_sym);
-        
-       // $.ajax({
-             // url: '/admin/product/inlineCheck',
-              //type: "post",
-              //dataType: "json",
-              //data: {pid:id},
-              ////contentType: 'application/json',
-               //success: function(response){
-                 //var upd_symbol=response.symbol;
-                 ////alert(upd_symbol);
-                 //document.getElementById("swhsymbol/"+v).value=upd_symbol;
-         // }
-        //});
-
-
-     
-
-     
-
-    
    }
    function update(v,id)
    {
@@ -176,7 +157,7 @@ function edit(v,id)
      var pre_code=document.getElementById("code/"+v).innerHTML;
     
 
-        $.ajax({
+             $.ajax({
               url: '/admin/product/inlineUpdate',
               type: "post",
               dataType: "json",
@@ -204,7 +185,7 @@ function edit(v,id)
                      document.getElementById("symbol/"+v).innerHTML=upd_symbol;
                      document.getElementById("price/"+v).style.display='block';
                      document.getElementById("price/"+v).innerHTML=upd_price;
-                    document.getElementById("inlineedit/"+v).style.display='block';
+                     document.getElementById("inlineedit/"+v).style.display='block';
 
                      document.getElementById("swhCode/"+v).style.display='none';
                      document.getElementById("swhName/"+v).style.display='none';
