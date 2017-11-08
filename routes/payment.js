@@ -69,12 +69,7 @@ app.post('/admin/Payment/create', function(req, res) {
 		});
       }
 
-
-
-
-
-
-	});
+});
 
 
 };	

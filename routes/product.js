@@ -130,13 +130,13 @@ module.exports = function(app) {
 
     });
 */
-    app.post('/admin/product/inlineUpdate/', function(req, res) {
+   app.post('/admin/product/inlineUpdate/', function(req, res) {
         
          var pid=req.body.pid;
          var name=req.body.name;
          var code=req.body.code;
          Product.findOne(
-           {code:code,_id: { $ne: pid }},
+           {code:code,_id: { $ne: pid}},
          
 			  function(err, product){
 				
@@ -165,7 +165,6 @@ module.exports = function(app) {
 						if(product) {
 
 		                   Product.find({_id: pid}, function(err, product){
-		                   	
 		                   	  var upd_name=product[0].name;
 		                   	  var upd_code=product[0].code;
 		                   	  var upd_price=product[0].price;
@@ -179,16 +178,12 @@ module.exports = function(app) {
 		        		  
 				      });
 		
-
-                  
-				}
+              }
         		
 		});
 	
     	 
 	});
 
-
-
-
+   
 };
